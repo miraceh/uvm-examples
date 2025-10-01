@@ -5,6 +5,7 @@ import uvm_pkg::*;
 `include "my_if.sv"
 `include "my_transaction.sv"
 `include "my_driver.sv"
+`include "my_env.sv"
 
 module top_tb;
 
@@ -26,7 +27,7 @@ dut my_dut(.clk(clk),
            .tx_en(output_if.valid));
 
 initial begin
-   run_test("my_driver");
+   run_test("my_env");
 end
 
 initial begin
@@ -43,7 +44,7 @@ initial begin
 end
 
 initial begin
-   uvm_config_db#(virtual my_if)::set(null, "uvm_test_top", "vif", input_if);
+   uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.drv", "vif", input_if);
 end
 
 endmodule
