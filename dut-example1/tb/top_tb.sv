@@ -21,10 +21,7 @@ dut my_dut(.clk(clk),
            .tx_en(tx_en));
 
 initial begin
-   my_driver drv;
-   drv = new("drv", null);
-   drv.main_phase(null);
-   $finish();
+   run_test("my_driver");
 end
 
 initial begin
