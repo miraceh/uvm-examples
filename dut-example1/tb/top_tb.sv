@@ -3,6 +3,7 @@
 
 import uvm_pkg::*;
 `include "my_if.sv"
+`include "my_transaction.sv"
 `include "my_driver.sv"
 
 module top_tb;
