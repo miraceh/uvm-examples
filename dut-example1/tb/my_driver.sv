@@ -20,18 +20,15 @@ class my_driver extends uvm_driver#(my_transaction);
 endclass
 
 task my_driver::main_phase(uvm_phase phase);
-   phase.raise_objection(this);
    vif.data <= 8'b0;
    vif.valid <= 1'b0;
    while(!vif.rst_n)
       @(posedge vif.clk);
-   for(int i = 0; i < 2; i++) begin 
-      req = new("req");
-      assert(req.randomize() with {pload.size == 200;});
+   while(1) begin
+      seq_item_port.get_next_item(req);
       drive_one_pkt(req);
+      seq_item_port.item_done();
    end
-   repeat(5) @(posedge vif.clk);
-   phase.drop_objection(this);
 endtask
 
 task my_driver::drive_one_pkt(my_transaction tr);
