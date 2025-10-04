@@ -1,6 +1,6 @@
 `ifndef MY_DRIVER__SV
 `define MY_DRIVER__SV
-class my_driver extends uvm_driver;
+class my_driver extends uvm_driver#(my_transaction);
 
    virtual my_if vif;
 
@@ -20,16 +20,15 @@ class my_driver extends uvm_driver;
 endclass
 
 task my_driver::main_phase(uvm_phase phase);
-   my_transaction tr;
    phase.raise_objection(this);
    vif.data <= 8'b0;
    vif.valid <= 1'b0;
    while(!vif.rst_n)
       @(posedge vif.clk);
    for(int i = 0; i < 2; i++) begin 
-      tr = new("tr");
-      assert(tr.randomize() with {pload.size == 200;});
-      drive_one_pkt(tr);
+      req = new("req");
+      assert(req.randomize() with {pload.size == 200;});
+      drive_one_pkt(req);
    end
    repeat(5) @(posedge vif.clk);
    phase.drop_objection(this);
