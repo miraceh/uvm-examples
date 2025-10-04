@@ -10,9 +10,10 @@ import uvm_pkg::*;
 `include "my_agent.sv"
 `include "my_model.sv"
 `include "my_scoreboard.sv"
-`include "my_sequence.sv"
 `include "my_env.sv"
 `include "base_test.sv"
+`include "my_case0.sv"
+`include "my_case1.sv"
 
 module top_tb;
 
@@ -34,10 +35,6 @@ dut my_dut(.clk(clk),
            .tx_en(output_if.valid));
 
 initial begin
-   run_test("base_test");
-end
-
-initial begin
    clk = 0;
    forever begin
       #100 clk = ~clk;
@@ -48,6 +45,10 @@ initial begin
    rst_n = 1'b0;
    #1000;
    rst_n = 1'b1;
+end
+
+initial begin
+   run_test();
 end
 
 initial begin
