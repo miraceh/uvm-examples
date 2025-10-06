@@ -12,6 +12,8 @@ class case0_sequence extends uvm_sequence #(my_transaction);
          starting_phase.raise_objection(this);
       repeat (10) begin
          `uvm_do(m_trans)
+         `uvm_info("case0_seq", "send one transaction, print it", UVM_LOW)
+         m_trans.print();
       end
       #100;
       if(starting_phase != null) 
