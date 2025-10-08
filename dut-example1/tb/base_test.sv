@@ -18,12 +18,12 @@ class base_test extends uvm_test;
    virtual function void connect_phase(uvm_phase phase);
        driver_log = $fopen("driver.log", "w");
        drv_log = $fopen("drv.log", "w");
-       env.i_agt.drv.set_report_id_file("my_driver", driver_log);
-       env.i_agt.drv.set_report_id_file("my_drv", drv_log);
+       env.i_agt.drv.set_report_severity_id_file(UVM_WARNING, "my_driver", driver_log);
+       env.i_agt.drv.set_report_severity_id_file(UVM_INFO, "my_drv", drv_log);
        env.i_agt.drv.set_report_id_action("my_driver", UVM_DISPLAY| UVM_LOG);
        env.i_agt.drv.set_report_id_action("my_drv", UVM_DISPLAY| UVM_LOG);
-       //env.i_agt.set_report_id_file_hier("my_driver", driver_log);
-       //env.i_agt.set_report_id_file_hier("my_drv", drv_log);
+       //env.i_agt.set_report_severity_id_file_hier(UVM_WARNING, "my_driver", driver_log);
+       //env.i_agt.set_report_severity_id_file_hier(UVM_INFO, "my_drv", drv_log);
        //env.i_agt.set_report_id_action_hier("my_driver", UVM_DISPLAY| UVM_LOG);
        //env.i_agt.set_report_id_action_hier("my_drv", UVM_DISPLAY| UVM_LOG);
    endfunction
