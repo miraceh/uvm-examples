@@ -14,10 +14,8 @@ class base_test extends uvm_test;
    `uvm_component_utils(base_test)
 
    virtual function void connect_phase(uvm_phase phase);
-       env.i_agt.drv.set_report_verbosity_level(UVM_HIGH);
-       //env.i_agt.drv.set_report_id_verbosity("my_driver", UVM_HIGH);
-       //env.i_agt.set_report_verbosity_level_hier(UVM_HIGH);
-       //env.i_agt.set_report_id_verbosity_hier("my_monitor", UVM_HIGH);
+       //env.i_agt.drv.set_report_severity_override(UVM_WARNING, UVM_ERROR);
+       env.i_agt.drv.set_report_severity_id_override(UVM_WARNING, "my_driver", UVM_ERROR);
    endfunction
 endclass
 
