@@ -14,13 +14,12 @@ class base_test extends uvm_test;
    `uvm_component_utils(base_test)
 
    virtual function void connect_phase(uvm_phase phase);
-       set_report_max_quit_count(5);
-       env.i_agt.drv.set_report_severity_action(UVM_WARNING, UVM_DISPLAY| UVM_COUNT);
-       //env.i_agt.set_report_severity_action_hier(UVM_WARNING, UVM_DISPLAY| UVM_COUNT);
-       //env.i_agt.drv.set_report_id_action("my_drv", UVM_DISPLAY| UVM_COUNT);
-       //env.i_agt.set_report_id_action_hier("my_drv", UVM_DISPLAY| UVM_COUNT);
-       //env.i_agt.drv.set_report_severity_id_action(UVM_WARNING, "my_driver", UVM_DISPLAY| UVM_COUNT);
-       //env.i_agt.set_report_severity_id_action_hier(UVM_WARNING, "my_driver", UVM_DISPLAY| UVM_COUNT);
+       env.i_agt.drv.set_report_severity_action(UVM_WARNING, UVM_DISPLAY| UVM_STOP);
+       //env.i_agt.set_report_severity_action_hier(UVM_WARNING, UVM_DISPLAY| UVM_STOP);
+       //env.i_agt.drv.set_report_id_action("my_drv", UVM_DISPLAY| UVM_STOP);
+       //env.i_agt.set_report_id_action_hier("my_drv", UVM_DISPLAY| UVM_STOP);
+       //env.i_agt.drv.set_report_severity_id_action(UVM_WARNING, "my_driver", UVM_DISPLAY| UVM_STOP);
+       //env.i_agt.set_report_severity_id_action_hier(UVM_WARNING, "my_driver", UVM_DISPLAY| UVM_STOP);
    endfunction
 endclass
 
