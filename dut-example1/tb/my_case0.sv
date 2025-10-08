@@ -36,8 +36,8 @@ function void my_case0::build_phase(uvm_phase phase);
                                            "env.i_agt.sqr.main_phase", 
                                            "default_sequence", 
                                            case0_sequence::type_id::get());
-   uvm_config_db#(int)::set(this, 
-                            "env.i_agt.drv", 
+   uvm_config_db#(int)::set(uvm_root::get(), 
+                            "uvm_test_top.env.i_agt.drv", 
                             "pre_num", 
                             999);
    `uvm_info("my_case0", "in my_case0, env.i_agt.drv.pre_num is set to 999", UVM_LOW)
