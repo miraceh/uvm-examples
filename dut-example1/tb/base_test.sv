@@ -12,16 +12,12 @@ class base_test extends uvm_test;
    extern virtual function void build_phase(uvm_phase phase);
    extern virtual function void report_phase(uvm_phase phase);
    `uvm_component_utils(base_test)
-
-   virtual function void connect_phase(uvm_phase phase);
-       env.i_agt.drv.set_report_severity_action(UVM_INFO, UVM_NO_ACTION);
-   endfunction
 endclass
 
 
 function void base_test::build_phase(uvm_phase phase);
    super.build_phase(phase);
-   env  =  my_env::type_id::create("env", this);
+   env  =  my_env::type_id::create("env", this); 
 endfunction
 
 function void base_test::report_phase(uvm_phase phase);

@@ -10,9 +10,6 @@ class case0_sequence extends uvm_sequence #(my_transaction);
    virtual task body();
       if(starting_phase != null) 
          starting_phase.raise_objection(this);
-      repeat (10) begin
-         `uvm_do(m_trans)
-      end
       #100;
       if(starting_phase != null) 
          starting_phase.drop_objection(this);
@@ -39,6 +36,10 @@ function void my_case0::build_phase(uvm_phase phase);
                                            "env.i_agt.sqr.main_phase", 
                                            "default_sequence", 
                                            case0_sequence::type_id::get());
+   uvm_config_db#(int)::set(this, 
+                            "env.i_agt.drv", 
+                            "pre_num", 
+                            7);
 endfunction
 
 `endif
