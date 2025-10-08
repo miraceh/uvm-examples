@@ -26,6 +26,8 @@ task my_driver::main_phase(uvm_phase phase);
       @(posedge vif.clk);
    while(1) begin
       seq_item_port.get_next_item(req);
+      `uvm_info("my_driver", "this information is UVM_HIGH", UVM_HIGH)
+      `uvm_info("my_drv", "this information is UVM_HIGH", UVM_HIGH)
       drive_one_pkt(req);
       seq_item_port.item_done();
    end
@@ -36,7 +38,7 @@ task my_driver::drive_one_pkt(my_transaction tr);
    int  data_size;
    
    data_size = tr.pack_bytes(data_q) / 8; 
-   `uvm_info("my_driver", "begin to drive one pkt", UVM_LOW);
+   //`uvm_info("my_driver", "begin to drive one pkt", UVM_LOW);
    repeat(3) @(posedge vif.clk);
    for ( int i = 0; i < data_size; i++ ) begin
       @(posedge vif.clk);
@@ -46,7 +48,7 @@ task my_driver::drive_one_pkt(my_transaction tr);
 
    @(posedge vif.clk);
    vif.valid <= 1'b0;
-   `uvm_info("my_driver", "end drive one pkt", UVM_LOW);
+   //`uvm_info("my_driver", "end drive one pkt", UVM_LOW);
 endtask
 
 

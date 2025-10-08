@@ -10,10 +10,8 @@ class case0_sequence extends uvm_sequence #(my_transaction);
    virtual task body();
       if(starting_phase != null) 
          starting_phase.raise_objection(this);
-      repeat(10) begin
-         m_trans = new();
-         m_trans.randomize();
-         m_trans.print();
+      repeat (10) begin
+         `uvm_do(m_trans)
       end
       #100;
       if(starting_phase != null) 

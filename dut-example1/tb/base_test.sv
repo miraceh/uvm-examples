@@ -12,6 +12,13 @@ class base_test extends uvm_test;
    extern virtual function void build_phase(uvm_phase phase);
    extern virtual function void report_phase(uvm_phase phase);
    `uvm_component_utils(base_test)
+
+   virtual function void connect_phase(uvm_phase phase);
+       env.i_agt.drv.set_report_verbosity_level(UVM_HIGH);
+       //env.i_agt.drv.set_report_id_verbosity("my_driver", UVM_HIGH);
+       //env.i_agt.set_report_verbosity_level_hier(UVM_HIGH);
+       //env.i_agt.set_report_id_verbosity_hier("my_monitor", UVM_HIGH);
+   endfunction
 endclass
 
 
