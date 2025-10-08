@@ -27,12 +27,6 @@ class my_env extends uvm_env;
       agt_scb_fifo = new("agt_scb_fifo", this);
       agt_mdl_fifo = new("agt_mdl_fifo", this);
       mdl_scb_fifo = new("mdl_scb_fifo", this);
-
-      uvm_config_db#(int)::set(uvm_root::get(), 
-                               "uvm_test_top.env.i_agt.drv", 
-                               "pre_num", 
-                               100);
-      `uvm_info("my_env", "in my_env, env.i_agt.drv.pre_num is set to 100", UVM_LOW)
    endfunction
 
    extern virtual function void connect_phase(uvm_phase phase);

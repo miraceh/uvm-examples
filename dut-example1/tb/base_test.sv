@@ -18,6 +18,11 @@ endclass
 function void base_test::build_phase(uvm_phase phase);
    super.build_phase(phase);
    env  =  my_env::type_id::create("env", this); 
+   uvm_config_db#(int)::set(this, 
+                            "env.i_agt.drv", 
+                            "pre_num", 
+                            100);
+   `uvm_info("base_test", "in base_test, env.i_agt.drv.pre_num is set to 100", UVM_LOW)
 endfunction
 
 function void base_test::report_phase(uvm_phase phase);
