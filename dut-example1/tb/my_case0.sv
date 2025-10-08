@@ -39,7 +39,8 @@ function void my_case0::build_phase(uvm_phase phase);
    uvm_config_db#(int)::set(this, 
                             "env.i_agt.drv", 
                             "pre_num", 
-                            7);
+                            999);
+   `uvm_info("my_case0", "in my_case0, env.i_agt.drv.pre_num is set to 999", UVM_LOW)
 endfunction
 
 `endif

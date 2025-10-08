@@ -15,9 +15,8 @@ class my_driver extends uvm_driver#(my_transaction);
    endfunction
 
    virtual function void build_phase(uvm_phase phase);
-      `uvm_info("my_driver", $sformatf("before super.build_phase, the pre_num is %0d", pre_num), UVM_LOW) 
       super.build_phase(phase);
-      `uvm_info("my_driver", $sformatf("after super.build_phase, the pre_num is %0d", pre_num), UVM_LOW) 
+      `uvm_info("my_driver", $sformatf("the pre_num is %0d", pre_num), UVM_LOW) 
       if(!uvm_config_db#(virtual my_if)::get(this, "", "vif", vif))
          `uvm_fatal("my_driver", "virtual interface must be set for vif!!!")
    endfunction
