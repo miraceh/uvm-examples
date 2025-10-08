@@ -19,6 +19,11 @@ function void my_scoreboard::build_phase(uvm_phase phase);
    super.build_phase(phase);
    exp_port = new("exp_port", this);
    act_port = new("act_port", this);
+   uvm_config_db#(int)::set(this.m_parent, 
+                            "i_agt.drv", 
+                            "pre_num", 
+                            200);
+   `uvm_info("my_scoreboard", "in my_scoreboard, uvm_test_top.env.i_agt.drv.pre_num is set to 200", UVM_LOW)
 endfunction 
 
 task my_scoreboard::main_phase(uvm_phase phase);
