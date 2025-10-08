@@ -14,14 +14,20 @@ class base_test extends uvm_test;
    `uvm_component_utils(base_test)
 
    virtual function void connect_phase(uvm_phase phase);
+       set_report_max_quit_count(5);
+       env.i_agt.drv.set_report_severity_action(UVM_WARNING, UVM_DISPLAY| UVM_COUNT);
+       //env.i_agt.set_report_severity_action_hier(UVM_WARNING, UVM_DISPLAY| UVM_COUNT);
+       //env.i_agt.drv.set_report_id_action("my_drv", UVM_DISPLAY| UVM_COUNT);
+       //env.i_agt.set_report_id_action_hier("my_drv", UVM_DISPLAY| UVM_COUNT);
+       //env.i_agt.drv.set_report_severity_id_action(UVM_WARNING, "my_driver", UVM_DISPLAY| UVM_COUNT);
+       //env.i_agt.set_report_severity_id_action_hier(UVM_WARNING, "my_driver", UVM_DISPLAY| UVM_COUNT);
    endfunction
 endclass
 
 
 function void base_test::build_phase(uvm_phase phase);
    super.build_phase(phase);
-   env  =  my_env::type_id::create("env", this); 
-   set_report_max_quit_count(5);
+   env  =  my_env::type_id::create("env", this);
 endfunction
 
 function void base_test::report_phase(uvm_phase phase);
