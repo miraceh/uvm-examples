@@ -26,8 +26,7 @@ task my_driver::main_phase(uvm_phase phase);
       @(posedge vif.clk);
    while(1) begin
       seq_item_port.get_next_item(req);
-      `uvm_warning("my_driver", "this information is warning, but prints as UVM_ERROR")
-      `uvm_warning("my_drv", "this information is warning")
+      `uvm_error("my_driver", "this information is UVM_ERROR")
       drive_one_pkt(req);
       seq_item_port.item_done();
    end

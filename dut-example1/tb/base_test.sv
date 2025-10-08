@@ -14,8 +14,6 @@ class base_test extends uvm_test;
    `uvm_component_utils(base_test)
 
    virtual function void connect_phase(uvm_phase phase);
-       //env.i_agt.drv.set_report_severity_override(UVM_WARNING, UVM_ERROR);
-       env.i_agt.drv.set_report_severity_id_override(UVM_WARNING, "my_driver", UVM_ERROR);
    endfunction
 endclass
 
@@ -23,6 +21,7 @@ endclass
 function void base_test::build_phase(uvm_phase phase);
    super.build_phase(phase);
    env  =  my_env::type_id::create("env", this); 
+   set_report_max_quit_count(5);
 endfunction
 
 function void base_test::report_phase(uvm_phase phase);
