@@ -26,6 +26,6 @@ sim:
 # Clean generated files
 clean:
 	@echo "Cleaning up..."
-	rm -rf $(WORK) transcript vsim.wlf vsim.db modelsim.ini
+	rm -rf $(WORK) transcript vsim.wlf vsim.db modelsim.ini *.log
 
 .PHONY: all comp sim clean
