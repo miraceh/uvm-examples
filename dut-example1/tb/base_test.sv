@@ -13,38 +13,23 @@ class base_test extends uvm_test;
    extern virtual function void report_phase(uvm_phase phase);
    `uvm_component_utils(base_test)
 
-   UVM_FILE info_log;
-   UVM_FILE warning_log;
-   UVM_FILE error_log;
-   UVM_FILE fatal_log;
+   UVM_FILE driver_log;
+   UVM_FILE drv_log;
    virtual function void connect_phase(uvm_phase phase);
-       info_log = $fopen("info.log", "w");
-       warning_log = $fopen("warning.log", "w");
-       error_log = $fopen("error.log", "w");
-       fatal_log = $fopen("fatal.log", "w");
-       env.i_agt.drv.set_report_severity_file(UVM_INFO,    info_log);
-       env.i_agt.drv.set_report_severity_file(UVM_WARNING, warning_log);
-       env.i_agt.drv.set_report_severity_file(UVM_ERROR,   error_log);
-       env.i_agt.drv.set_report_severity_file(UVM_FATAL,   fatal_log);
-       env.i_agt.drv.set_report_severity_action(UVM_INFO, UVM_DISPLAY | UVM_LOG);
-       env.i_agt.drv.set_report_severity_action(UVM_WARNING, UVM_DISPLAY | UVM_LOG);
-       env.i_agt.drv.set_report_severity_action(UVM_ERROR, UVM_DISPLAY | UVM_COUNT | UVM_LOG);
-       env.i_agt.drv.set_report_severity_action(UVM_FATAL, UVM_DISPLAY | UVM_EXIT | UVM_LOG);
-      
-       //env.i_agt.set_report_severity_file_hier(UVM_INFO,    info_log);
-       //env.i_agt.set_report_severity_file_hier(UVM_WARNING, warning_log);
-       //env.i_agt.set_report_severity_file_hier(UVM_ERROR,   error_log);
-       //env.i_agt.set_report_severity_file_hier(UVM_FATAL,   fatal_log);
-       //env.i_agt.set_report_severity_action_hier(UVM_INFO, UVM_DISPLAY| UVM_LOG);
-       //env.i_agt.set_report_severity_action_hier(UVM_WARNING, UVM_DISPLAY| UVM_LOG);
-       //env.i_agt.set_report_severity_action_hier(UVM_ERROR, UVM_DISPLAY| UVM_COUNT | UVM_LOG);
-       //env.i_agt.set_report_severity_action_hier(UVM_FATAL, UVM_DISPLAY| | UVM_EXIT | UVM_LOG);
+       driver_log = $fopen("driver.log", "w");
+       drv_log = $fopen("drv.log", "w");
+       env.i_agt.drv.set_report_id_file("my_driver", driver_log);
+       env.i_agt.drv.set_report_id_file("my_drv", drv_log);
+       env.i_agt.drv.set_report_id_action("my_driver", UVM_DISPLAY| UVM_LOG);
+       env.i_agt.drv.set_report_id_action("my_drv", UVM_DISPLAY| UVM_LOG);
+       //env.i_agt.set_report_id_file_hier("my_driver", driver_log);
+       //env.i_agt.set_report_id_file_hier("my_drv", drv_log);
+       //env.i_agt.set_report_id_action_hier("my_driver", UVM_DISPLAY| UVM_LOG);
+       //env.i_agt.set_report_id_action_hier("my_drv", UVM_DISPLAY| UVM_LOG);
    endfunction
    virtual function void final_phase(uvm_phase phase);
-       $fclose(info_log);
-       $fclose(warning_log);
-       $fclose(error_log);
-       $fclose(fatal_log);
+       $fclose(driver_log);
+       $fclose(drv_log);
    endfunction
 endclass
 
