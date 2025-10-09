@@ -28,7 +28,7 @@ class my_case0 extends base_test;
 
    virtual function void connect_phase(uvm_phase phase);
       super.connect_phase(phase);
-      check_config_usage();
+      print_config(1);
    endfunction
    `uvm_component_utils(my_case0)
 endclass
@@ -42,7 +42,7 @@ function void my_case0::build_phase(uvm_phase phase);
                                            "default_sequence", 
                                            case0_sequence::type_id::get());
    uvm_config_db#(int)::set(this, 
-                            "env.i_atg.drv", 
+                            "env.i_agt.drv", 
                             "pre_num", 
                             999);
    uvm_config_db#(int)::set(this, 
