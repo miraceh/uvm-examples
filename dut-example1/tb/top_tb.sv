@@ -51,9 +51,9 @@ initial begin
 end
 
 initial begin
-   uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env.i_agt*", "vif", input_if);
-   uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env.o_agt*", "vif", output_if);
-   `uvm_info("top_tb", "use wildchar in top_tb's config_db::set!", UVM_LOW)
+   uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env.i_agt.drv", "vif", input_if);
+   uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env.i_agt.mon", "vif", input_if);
+   uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env.o_agt.mon", "vif", output_if);
 end
 
 endmodule

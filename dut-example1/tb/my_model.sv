@@ -18,9 +18,11 @@ function my_model::new(string name, uvm_component parent);
 endfunction 
 
 function void my_model::build_phase(uvm_phase phase);
+   int rm_value;
    super.build_phase(phase);
    port = new("port", this);
    ap = new("ap", this);
+   void'(uvm_config_db#(int)::get(this, "", "rm_value", rm_value));
 endfunction
 
 task my_model::main_phase(uvm_phase phase);
