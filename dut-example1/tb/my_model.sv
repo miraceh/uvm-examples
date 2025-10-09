@@ -6,7 +6,6 @@ class my_model extends uvm_component;
    uvm_blocking_get_port #(my_transaction)  port;
    uvm_analysis_port #(my_transaction)  ap;
 
-   int drv_pre_num;
    extern function new(string name, uvm_component parent);
    extern function void build_phase(uvm_phase phase);
    extern virtual  task main_phase(uvm_phase phase);
@@ -22,9 +21,6 @@ function void my_model::build_phase(uvm_phase phase);
    super.build_phase(phase);
    port = new("port", this);
    ap = new("ap", this);
-   `uvm_info("my_model", $sformatf("before get, the pre_num is %0d", drv_pre_num), UVM_LOW) 
-   void'(uvm_config_db#(int)::get(this.m_parent, "i_agt.drv", "pre_num", drv_pre_num));
-   `uvm_info("my_model", $sformatf("after get, the pre_num is %0d", drv_pre_num), UVM_LOW) 
 endfunction
 
 task my_model::main_phase(uvm_phase phase);

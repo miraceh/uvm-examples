@@ -4,19 +4,13 @@ class my_driver extends uvm_driver#(my_transaction);
 
    virtual my_if vif;
 
-   int pre_num;
-   `uvm_component_utils_begin(my_driver)
-      `uvm_field_int(pre_num, UVM_ALL_ON)
-   `uvm_component_utils_end
-
+   `uvm_component_utils(my_driver)
    function new(string name = "my_driver", uvm_component parent = null);
       super.new(name, parent);
-      pre_num = 3;
    endfunction
 
    virtual function void build_phase(uvm_phase phase);
       super.build_phase(phase);
-      `uvm_info("my_driver", $sformatf("the pre_num is %0d", pre_num), UVM_LOW) 
       if(!uvm_config_db#(virtual my_if)::get(this, "", "vif", vif))
          `uvm_fatal("my_driver", "virtual interface must be set for vif!!!")
    endfunction
