@@ -18,6 +18,13 @@ function void A::build_phase(uvm_phase phase);
 endfunction
 
 task A::main_phase(uvm_phase phase);
+   my_transaction tr;
+   repeat(10) begin
+      #10;
+      tr = new("tr");
+      assert(tr.randomize());
+      A_port.put(tr);
+   end
 endtask
 
 `endif
