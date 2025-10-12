@@ -1,31 +1,42 @@
-# Simple Makefile for QuestaSim
+# Simple Makefile for QuestaSim with TB and TLM modes
 
 # Variables
 WORK      = work
 DUT_SRC   = ../dut/dut.sv
 TB_SRC    = ../tb/top_tb.sv
-TOP       = top_tb
+TLM_SRC   = ../tlm/top_tb.sv
+TOP_TB    = top_tb
+TOP_TLM   = top_tb
 
 VLOG      = vlog
 VSIM      = vsim
 
-# Default target: compile and simulate
-all: comp sim
+# Default: compile & run TB
+all: comp_tlm sim_tlm
 
-# Compile DUT and TB
+# ---------- TB ----------
 comp:
-	@echo "Compiling DUT and Testbench..."
+	@echo "Compiling DUT and TB..."
 	@if [ ! -d $(WORK) ]; then vlib $(WORK); fi
 	$(VLOG) -work $(WORK) $(DUT_SRC) $(TB_SRC)
 
-# Run simulation
 sim:
-	@echo "Running simulation..."
-	$(VSIM) -c -do "run -all; quit" $(WORK).$(TOP)
+	@echo "Running TB simulation..."
+	$(VSIM) -c -do "run -all; quit" $(WORK).$(TOP_TB)
 
-# Clean generated files
+# ---------- TLM ----------
+comp_tlm:
+	@echo "Compiling DUT and TLM..."
+	@if [ ! -d $(WORK) ]; then vlib $(WORK); fi
+	$(VLOG) -work $(WORK) $(DUT_SRC) $(TLM_SRC)
+
+sim_tlm:
+	@echo "Running TLM simulation..."
+	$(VSIM) -c -do "run -all; quit" $(WORK).$(TOP_TLM)
+
+# ---------- Clean ----------
 clean:
 	@echo "Cleaning up..."
 	rm -rf $(WORK) transcript vsim.wlf vsim.db modelsim.ini *.log
 
-.PHONY: all comp sim clean
+.PHONY: all comp sim comp_tlm sim_tlm clean
