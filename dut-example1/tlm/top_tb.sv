@@ -4,6 +4,7 @@
 import uvm_pkg::*;
 `include "my_if.sv"
 `include "my_transaction.sv"
+`include "C.sv"
 `include "A.sv"
 `include "B.sv"
 `include "my_env.sv"
