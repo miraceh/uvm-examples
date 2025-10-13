@@ -3,7 +3,7 @@
 class A extends uvm_component;
    `uvm_component_utils(A)
 
-   uvm_blocking_transport_port#(my_transaction, my_transaction) A_transport;
+   uvm_nonblocking_put_port#(my_transaction) A_port;
    function new(string name, uvm_component parent);
       super.new(name, parent);
    endfunction
@@ -14,19 +14,16 @@ endclass
 
 function void A::build_phase(uvm_phase phase);
    super.build_phase(phase);
-   A_transport = new("A_transport", this);
+   A_port = new("A_port", this);
 endfunction
 
 task A::main_phase(uvm_phase phase);
    my_transaction tr;
-   my_transaction rsp;
    repeat(10) begin
-      #10;
       tr = new("tr");
       assert(tr.randomize());
-      A_transport.transport(tr, rsp);
-      `uvm_info("A", "received rsp", UVM_MEDIUM)
-      rsp.print();
+      while(!A_port.can_put()) #10;
+      void'(A_port.try_put(tr));
    end
 endtask
 
