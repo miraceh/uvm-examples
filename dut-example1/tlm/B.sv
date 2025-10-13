@@ -3,27 +3,25 @@
 class B extends uvm_component;
    `uvm_component_utils(B)
 
-   uvm_blocking_get_port#(my_transaction) B_port;
+   uvm_blocking_transport_imp#(my_transaction, my_transaction, B) B_imp;
    function new(string name, uvm_component parent);
       super.new(name, parent);
    endfunction
 
    extern function void build_phase(uvm_phase phase);
-   extern virtual  task main_phase(uvm_phase phase);
+   extern task transport(my_transaction req, output my_transaction rsp);
 endclass
 
 function void B::build_phase(uvm_phase phase);
    super.build_phase(phase);
-   B_port = new("B_port", this);
+   B_imp = new("B_imp", this);
 endfunction
 
-task B::main_phase(uvm_phase phase);
-   my_transaction tr;
-   while(1) begin
-      B_port.get(tr);
-      `uvm_info("B", "get a transaction", UVM_LOW) 
-      tr.print();
-   end
+task B::transport(my_transaction req, output my_transaction rsp);
+   `uvm_info("B", "receive a transaction", UVM_LOW) 
+   req.print();
+   //do something according to req
+   #5;
+   rsp = new("rsp");
 endtask
-
 `endif
