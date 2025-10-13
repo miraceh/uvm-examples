@@ -26,7 +26,7 @@ endclass
 
 function void my_env::connect_phase(uvm_phase phase);
    super.connect_phase(phase);
-   A_inst.A_port.connect(B_inst.B_imp);
+   A_inst.A_export.connect(B_inst.B_imp);
 endfunction
 
 `endif

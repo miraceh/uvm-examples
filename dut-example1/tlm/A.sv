@@ -3,7 +3,7 @@
 class A extends uvm_component;
    `uvm_component_utils(A)
 
-   uvm_blocking_put_port#(my_transaction) A_port;
+   uvm_blocking_put_export#(my_transaction) A_export;
    function new(string name, uvm_component parent);
       super.new(name, parent);
    endfunction
@@ -14,7 +14,7 @@ endclass
 
 function void A::build_phase(uvm_phase phase);
    super.build_phase(phase);
-   A_port = new("A_port", this);
+   A_export = new("A_export", this);
 endfunction
 
 task A::main_phase(uvm_phase phase);
@@ -23,7 +23,7 @@ task A::main_phase(uvm_phase phase);
       #10;
       tr = new("tr");
       assert(tr.randomize());
-      A_port.put(tr);
+      A_export.put(tr);
    end
 endtask
 
