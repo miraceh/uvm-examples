@@ -1,9 +1,9 @@
-`ifndef B__SV
-`define B__SV
-class B extends uvm_component;
-   `uvm_component_utils(B)
+`ifndef C__SV
+`define C__SV
+class C extends uvm_component;
+   `uvm_component_utils(C)
 
-   uvm_analysis_imp#(my_transaction, B) B_imp;
+   uvm_analysis_imp#(my_transaction, C) C_imp;
    function new(string name, uvm_component parent);
       super.new(name, parent);
    endfunction
@@ -14,21 +14,21 @@ class B extends uvm_component;
    extern virtual  task main_phase(uvm_phase phase);
 endclass
 
-function void B::build_phase(uvm_phase phase);
+function void C::build_phase(uvm_phase phase);
    super.build_phase(phase);
-   B_imp = new("B_imp", this);
+   C_imp = new("C_imp", this);
 endfunction
 
-function void B::connect_phase(uvm_phase phase);
+function void C::connect_phase(uvm_phase phase);
    super.connect_phase(phase);
 endfunction
 
-function void B::write(my_transaction tr);
-   `uvm_info("B", "receive a transaction", UVM_LOW) 
+function void C::write(my_transaction tr);
+   `uvm_info("C", "receive a transaction", UVM_LOW) 
    tr.print();
 endfunction
 
-task B::main_phase(uvm_phase phase);
+task C::main_phase(uvm_phase phase);
 endtask
 
 `endif
