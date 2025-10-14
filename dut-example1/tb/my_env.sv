@@ -8,9 +8,7 @@ class my_env extends uvm_env;
    my_model   mdl;
    my_scoreboard scb;
    
-   uvm_tlm_analysis_fifo #(my_transaction) agt_scb_fifo;
    uvm_tlm_analysis_fifo #(my_transaction) agt_mdl_fifo;
-   uvm_tlm_analysis_fifo #(my_transaction) mdl_scb_fifo;
    
    function new(string name = "my_env", uvm_component parent);
       super.new(name, parent);
@@ -24,9 +22,7 @@ class my_env extends uvm_env;
       o_agt.is_active = UVM_PASSIVE;
       mdl = my_model::type_id::create("mdl", this);
       scb = my_scoreboard::type_id::create("scb", this);
-      agt_scb_fifo = new("agt_scb_fifo", this);
       agt_mdl_fifo = new("agt_mdl_fifo", this);
-      mdl_scb_fifo = new("mdl_scb_fifo", this);
 
    endfunction
 
@@ -39,10 +35,23 @@ function void my_env::connect_phase(uvm_phase phase);
    super.connect_phase(phase);
    i_agt.ap.connect(agt_mdl_fifo.analysis_export);
    mdl.port.connect(agt_mdl_fifo.blocking_get_export);
-   mdl.ap.connect(mdl_scb_fifo.analysis_export);
-   scb.exp_port.connect(mdl_scb_fifo.blocking_get_export);
-   o_agt.ap.connect(agt_scb_fifo.analysis_export);
-   scb.act_port.connect(agt_scb_fifo.blocking_get_export); 
+   o_agt.ap.connect(scb.monitor_imp);
+   mdl.ap[0].connect(scb.model0_imp);
+   mdl.ap[1].connect(scb.model1_imp);
+   mdl.ap[2].connect(scb.model2_imp);
+   mdl.ap[3].connect(scb.model3_imp);
+   mdl.ap[4].connect(scb.model4_imp);
+   mdl.ap[5].connect(scb.model5_imp);
+   mdl.ap[6].connect(scb.model6_imp);
+   mdl.ap[7].connect(scb.model7_imp);
+   mdl.ap[8].connect(scb.model8_imp);
+   mdl.ap[9].connect(scb.model9_imp);
+   mdl.ap[10].connect(scb.modela_imp);
+   mdl.ap[11].connect(scb.modelb_imp);
+   mdl.ap[12].connect(scb.modelc_imp);
+   mdl.ap[13].connect(scb.modeld_imp);
+   mdl.ap[14].connect(scb.modele_imp);
+   mdl.ap[15].connect(scb.modelf_imp);
 endfunction
 
 `endif
