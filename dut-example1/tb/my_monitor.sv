@@ -36,7 +36,8 @@ task my_monitor::collect_one_pkt(my_transaction tr);
    byte unsigned data_array[];
    logic [7:0] data;
    logic valid = 0;
-   int data_size; 
+   int data_size;
+   
    while(1) begin
       @(posedge vif.clk);
       if(vif.valid) break;

@@ -12,7 +12,7 @@ VLOG      = vlog
 VSIM      = vsim
 
 # Default: compile & run TB
-all: comp_tlm sim_tlm
+all: comp sim
 
 # ---------- TB ----------
 comp:

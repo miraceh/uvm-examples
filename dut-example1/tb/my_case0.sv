@@ -10,6 +10,9 @@ class case0_sequence extends uvm_sequence #(my_transaction);
    virtual task body();
       if(starting_phase != null) 
          starting_phase.raise_objection(this);
+      repeat (10) begin
+         `uvm_do(m_trans)
+      end
       #100;
       if(starting_phase != null) 
          starting_phase.drop_objection(this);
@@ -25,11 +28,6 @@ class my_case0 extends base_test;
       super.new(name,parent);
    endfunction 
    extern virtual function void build_phase(uvm_phase phase); 
-
-   virtual function void connect_phase(uvm_phase phase);
-      super.connect_phase(phase);
-      print_config(1);
-   endfunction
    `uvm_component_utils(my_case0)
 endclass
 
@@ -41,14 +39,6 @@ function void my_case0::build_phase(uvm_phase phase);
                                            "env.i_agt.sqr.main_phase", 
                                            "default_sequence", 
                                            case0_sequence::type_id::get());
-   uvm_config_db#(int)::set(this, 
-                            "env.i_agt.drv", 
-                            "pre_num", 
-                            999);
-   uvm_config_db#(int)::set(this, 
-                            "env.mdl", 
-                            "rm_value", 
-                            10);
 endfunction
 
 `endif
