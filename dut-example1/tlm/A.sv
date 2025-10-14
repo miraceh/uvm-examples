@@ -3,7 +3,7 @@
 class A extends uvm_component;
    `uvm_component_utils(A)
 
-   uvm_analysis_port#(my_transaction) A_ap;
+   uvm_analysis_export#(my_transaction) A_exp;
    function new(string name, uvm_component parent);
       super.new(name, parent);
    endfunction
@@ -14,7 +14,7 @@ endclass
 
 function void A::build_phase(uvm_phase phase);
    super.build_phase(phase);
-   A_ap = new("A_ap", this);
+   A_exp = new("A_exp", this);
 endfunction
 
 task A::main_phase(uvm_phase phase);
@@ -23,7 +23,7 @@ task A::main_phase(uvm_phase phase);
       #10;
       tr = new("tr");
       assert(tr.randomize());
-      A_ap.write(tr);
+      A_exp.write(tr);
    end
 endtask
 

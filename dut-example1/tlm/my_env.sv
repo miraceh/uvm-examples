@@ -28,8 +28,8 @@ endclass
 
 function void my_env::connect_phase(uvm_phase phase);
    super.connect_phase(phase);
-   A_inst.A_ap.connect(B_inst.B_imp);
-   A_inst.A_ap.connect(C_inst.C_imp);
+   A_inst.A_exp.connect(B_inst.B_imp);
+   A_inst.A_exp.connect(C_inst.C_imp);
 endfunction
 
 `endif
