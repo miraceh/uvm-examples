@@ -8,17 +8,28 @@ class A extends uvm_component;
    endfunction
 
    extern function void build_phase(uvm_phase phase);
-   extern function void connect_phase(uvm_phase phase);
+   extern virtual  task main_phase(uvm_phase phase);
+   extern virtual  task post_main_phase(uvm_phase phase);
 endclass
 
 function void A::build_phase(uvm_phase phase);
    super.build_phase(phase);
-   `uvm_info("A", "build_phase", UVM_LOW)
 endfunction
 
-function void A::connect_phase(uvm_phase phase);
-   super.connect_phase(phase);
-   `uvm_info("A", "connect_phase", UVM_LOW)
-endfunction
+task A::main_phase(uvm_phase phase);
+   phase.raise_objection(this);
+   `uvm_info("A", "main phase start", UVM_LOW)
+   #100;
+   `uvm_info("A", "main phase end", UVM_LOW)
+   phase.drop_objection(this);
+endtask
+
+task A::post_main_phase(uvm_phase phase);
+   phase.raise_objection(this);
+   `uvm_info("A", "post main phase start", UVM_LOW)
+   #300;
+   `uvm_info("A", "post main phase end", UVM_LOW)
+   phase.drop_objection(this);
+endtask
 
 `endif

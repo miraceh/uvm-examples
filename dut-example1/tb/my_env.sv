@@ -3,10 +3,8 @@
 
 class my_env extends uvm_env;
 
-   A   A_inst0;
-   A   A_inst1;
-   A   A_inst2;
-   A   A_inst3;
+   A   A_inst;
+   B   B_inst;
    
    
    function new(string name = "my_env", uvm_component parent);
@@ -16,14 +14,13 @@ class my_env extends uvm_env;
    virtual function void build_phase(uvm_phase phase);
       super.build_phase(phase);
 
-      A_inst0 = A::type_id::create("dddd", this);
-      A_inst1 = A::type_id::create("zzzz", this);
-      A_inst2 = A::type_id::create("jjjj", this);
-      A_inst3 = A::type_id::create("aaaa", this);
+      A_inst = A::type_id::create("A_inst", this);
+      B_inst = B::type_id::create("B_inst", this);
 
    endfunction
 
    `uvm_component_utils(my_env)
 endclass
+
 
 `endif

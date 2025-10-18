@@ -1,10 +1,11 @@
-`timescale 1ns/1ps
+`timescale 1ns/1ns
 `include "uvm_macros.svh"
 
 import uvm_pkg::*;
 `include "my_if.sv"
 `include "my_transaction.sv"
 `include "A.sv"
+`include "B.sv"
 `include "my_env.sv"
 `include "base_test.sv"
 `include "my_case0.sv"
