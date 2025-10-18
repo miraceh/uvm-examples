@@ -22,7 +22,7 @@ comp:
 
 sim:
 	@echo "Running TB simulation..."
-	$(VSIM) -c -do "run -all; quit" $(WORK).$(TOP_TB)
+	$(VSIM) -c -do "run -all; quit" $(WORK).$(TOP_TB) +UVM_TESTNAME=my_case0
 
 # ---------- TLM ----------
 comp_tlm:
