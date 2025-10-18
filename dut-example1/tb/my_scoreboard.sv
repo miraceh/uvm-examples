@@ -8,6 +8,7 @@ class my_scoreboard extends uvm_scoreboard;
 
    extern function new(string name, uvm_component parent = null);
    extern virtual function void build_phase(uvm_phase phase);
+   extern virtual function void connect_phase(uvm_phase phase);
    extern virtual task main_phase(uvm_phase phase);
 endclass 
 
@@ -19,6 +20,11 @@ function void my_scoreboard::build_phase(uvm_phase phase);
    super.build_phase(phase);
    exp_port = new("exp_port", this);
    act_port = new("act_port", this);
+   `uvm_info("scb", "build_phase", UVM_LOW)
+endfunction 
+
+function void my_scoreboard::connect_phase(uvm_phase phase);
+   `uvm_info("scb", "connect_phase", UVM_LOW)
 endfunction 
 
 task my_scoreboard::main_phase(uvm_phase phase);

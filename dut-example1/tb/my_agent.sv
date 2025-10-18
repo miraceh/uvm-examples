@@ -26,6 +26,7 @@ function void my_agent::build_phase(uvm_phase phase);
       drv = my_driver::type_id::create("drv", this);
    end
    mon = my_monitor::type_id::create("mon", this);
+   `uvm_info("agent", "build_phase", UVM_LOW)
 endfunction 
 
 function void my_agent::connect_phase(uvm_phase phase);
@@ -34,6 +35,7 @@ function void my_agent::connect_phase(uvm_phase phase);
       drv.seq_item_port.connect(sqr.seq_item_export);
    end
    ap = mon.ap;
+   `uvm_info("agent", "connect_phase", UVM_LOW)
 endfunction
 
 `endif
