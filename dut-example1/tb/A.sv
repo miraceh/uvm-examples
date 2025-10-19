@@ -7,29 +7,33 @@ class A extends uvm_component;
       super.new(name, parent);
    endfunction
 
-   extern function void build_phase(uvm_phase phase);
-   extern virtual  task post_shutdown_phase(uvm_phase phase);
-   extern virtual  task run_phase(uvm_phase phase);
+   extern virtual  task reset_phase(uvm_phase phase);
+   extern virtual  task post_reset_phase(uvm_phase phase);
+   extern virtual  task main_phase(uvm_phase phase);
+   extern virtual  task post_main_phase(uvm_phase phase);
 endclass
 
-function void A::build_phase(uvm_phase phase);
-   super.build_phase(phase);
-endfunction
-
-task A::post_shutdown_phase(uvm_phase phase);
+task A::reset_phase(uvm_phase phase);
    phase.raise_objection(this);
-   `uvm_info("A", "post shutdown phase start", UVM_LOW)
+   `uvm_info("A", "enter into reset phase", UVM_LOW)
    #300;
-   `uvm_info("A", "post shutdown phase end", UVM_LOW)
    phase.drop_objection(this);
 endtask
 
-task A::run_phase(uvm_phase phase);
+task A::post_reset_phase(uvm_phase phase);
+   `uvm_info("A", "enter into post reset phase", UVM_LOW)
+endtask
+
+task A::main_phase(uvm_phase phase);
    phase.raise_objection(this);
-   `uvm_info("A", "run phase start", UVM_LOW)
+   `uvm_info("A", "enter into main phase", UVM_LOW)
    #200;
-   `uvm_info("A", "run phase end", UVM_LOW)
    phase.drop_objection(this);
 endtask
+
+task A::post_main_phase(uvm_phase phase);
+   `uvm_info("A", "enter into post main phase", UVM_LOW)
+endtask
+
 
 `endif
