@@ -1,4 +1,4 @@
-`timescale 1ns/1ps
+`timescale 1ns/1ns
 `include "uvm_macros.svh"
 
 import uvm_pkg::*;
@@ -43,6 +43,10 @@ end
 initial begin
    rst_n = 1'b0;
    #1000;
+   rst_n = 1'b1;
+   #3000;
+   rst_n = 1'b0;
+   #3000;
    rst_n = 1'b1;
 end
 
