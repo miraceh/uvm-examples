@@ -9,11 +9,10 @@ class case0_sequence extends uvm_sequence #(my_transaction);
    
    virtual task body();
       if(starting_phase != null) 
-         starting_phase.raise_objection(this);
+         starting_phase.raise_objection(this, "case0 objection", 2);
       #10000;
-      `uvm_info("case0_sequence", "drop objection",  UVM_LOW)
       if(starting_phase != null) 
-         starting_phase.drop_objection(this);
+         starting_phase.drop_objection(this, "case0 objection", 2);
    endtask
 
    `uvm_object_utils(case0_sequence)
