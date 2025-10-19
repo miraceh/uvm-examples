@@ -10,6 +10,7 @@ class base_test extends uvm_test;
    endfunction
    
    extern virtual function void build_phase(uvm_phase phase);
+   extern virtual task main_phase(uvm_phase phase);
    extern virtual function void report_phase(uvm_phase phase);
    `uvm_component_utils(base_test)
 endclass
@@ -19,6 +20,10 @@ function void base_test::build_phase(uvm_phase phase);
    super.build_phase(phase);
    env  =  my_env::type_id::create("env", this); 
 endfunction
+
+task base_test::main_phase(uvm_phase phase);
+   phase.phase_done.set_drain_time(this, 200);
+endtask
 
 function void base_test::report_phase(uvm_phase phase);
    uvm_report_server server;

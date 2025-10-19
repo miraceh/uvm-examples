@@ -10,10 +10,8 @@ class case0_sequence extends uvm_sequence #(my_transaction);
    virtual task body();
       if(starting_phase != null) 
          starting_phase.raise_objection(this);
-      repeat (10) begin
-         `uvm_do(m_trans)
-      end
-      #100;
+      #10000;
+      `uvm_info("case0_sequence", "drop objection",  UVM_LOW)
       if(starting_phase != null) 
          starting_phase.drop_objection(this);
    endtask
@@ -28,14 +26,27 @@ class my_case0 extends base_test;
       super.new(name,parent);
    endfunction 
    extern virtual function void build_phase(uvm_phase phase); 
+   extern virtual task post_main_phase(uvm_phase phase); 
+   extern virtual function void final_phase(uvm_phase phase); 
    `uvm_component_utils(my_case0)
 endclass
 
 
 function void my_case0::build_phase(uvm_phase phase);
-   phase.raise_objection(this);
    super.build_phase(phase);
-   phase.drop_objection(this);
+
+   uvm_config_db#(uvm_object_wrapper)::set(this, 
+                                           "env.i_agt.sqr.main_phase", 
+                                           "default_sequence", 
+                                           case0_sequence::type_id::get());
+endfunction
+
+task my_case0::post_main_phase(uvm_phase phase);
+   `uvm_info("my_case0", "enter post_main phase", UVM_LOW)
+endtask
+
+function void my_case0::final_phase(uvm_phase phase);
+   `uvm_info("my_case0", "enter final phase", UVM_LOW)
 endfunction
 
 `endif
