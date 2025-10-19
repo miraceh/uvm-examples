@@ -31,8 +31,8 @@ task my_model::main_phase(uvm_phase phase);
       port.get(tr);
       new_tr = new("new_tr");
       new_tr.copy(tr);
-      //`uvm_info("my_model", "get one transaction, copy and print it:", UVM_LOW)
-      //new_tr.print();
+      `uvm_info("my_model", "get one transaction, copy and print it:", UVM_LOW)
+      new_tr.print();
       ap.write(new_tr);
    end
 endtask
