@@ -12,16 +12,16 @@ class my_case0 extends base_test;
 endclass
 
 task my_case0::main_phase(uvm_phase phase);
-   phase.raise_objection(this);
-   #100;
-   phase.drop_objection(this);
+   for(int i = 0; i < 9; i++) begin
+      #10;
+      `uvm_info("case0", "main_phase is executed", UVM_LOW)
+   end
 endtask
 
 task my_case0::run_phase(uvm_phase phase);
-   for(int i = 0; i < 9; i++) begin
-      #10;
-      `uvm_info("case0", "run_phase is executed", UVM_LOW)
-   end
+   phase.raise_objection(this);
+   #100;
+   phase.drop_objection(this);
 endtask
 
 function void my_case0::build_phase(uvm_phase phase);
