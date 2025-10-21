@@ -3,8 +3,7 @@
 
 class base_test extends uvm_test;
 
-   A   A_inst;
-   B   B_inst;
+   my_env         env;
    
    function new(string name = "base_test", uvm_component parent = null);
       super.new(name,parent);
@@ -18,8 +17,7 @@ endclass
 
 function void base_test::build_phase(uvm_phase phase);
    super.build_phase(phase);
-   A_inst = A::type_id::create("A_inst", this);
-   B_inst = B::type_id::create("B_inst", this);
+   env  =  my_env::type_id::create("env", this); 
 endfunction
 
 function void base_test::report_phase(uvm_phase phase);
