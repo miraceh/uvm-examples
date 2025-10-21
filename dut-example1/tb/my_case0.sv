@@ -11,7 +11,7 @@ class sequence0 extends uvm_sequence #(my_transaction);
       if(starting_phase != null) 
          starting_phase.raise_objection(this);
       repeat (5) begin
-         `uvm_do_pri(m_trans, 100)
+         `uvm_do(m_trans)
          `uvm_info("sequence0", "send one transaction", UVM_MEDIUM)
       end
       #100;
@@ -33,7 +33,7 @@ class sequence1 extends uvm_sequence #(my_transaction);
       if(starting_phase != null) 
          starting_phase.raise_objection(this);
       repeat (5) begin
-         `uvm_do_pri_with(m_trans, 200, {m_trans.pload.size < 500;})
+         `uvm_do_with(m_trans, {m_trans.pload.size < 500;})
          `uvm_info("sequence1", "send one transaction", UVM_MEDIUM)
       end
       #100;
@@ -64,8 +64,8 @@ task my_case0::main_phase(uvm_phase phase);
    seq1.starting_phase = phase;
    env.i_agt.sqr.set_arbitration(SEQ_ARB_STRICT_FIFO);
    fork
-      seq0.start(env.i_agt.sqr);
-      seq1.start(env.i_agt.sqr);
+      seq0.start(env.i_agt.sqr, null, 100);
+      seq1.start(env.i_agt.sqr, null, 200);
    join
 endtask
 
