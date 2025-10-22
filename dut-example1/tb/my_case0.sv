@@ -10,19 +10,7 @@ class sequence0 extends uvm_sequence #(my_transaction);
    virtual task body();
       if(starting_phase != null) 
          starting_phase.raise_objection(this);
-      repeat (2) begin
-         `uvm_do(m_trans)
-         `uvm_info("sequence0", "send one transaction", UVM_MEDIUM)
-      end
-      lock();
-      `uvm_info("sequence0", "locked the sequencer ", UVM_MEDIUM)
       repeat (5) begin
-         `uvm_do(m_trans)
-         `uvm_info("sequence0", "send one transaction", UVM_MEDIUM)
-      end
-      `uvm_info("sequence0", "unlocked the sequencer ", UVM_MEDIUM)
-      unlock();
-      repeat (2) begin
          `uvm_do(m_trans)
          `uvm_info("sequence0", "send one transaction", UVM_MEDIUM)
       end
@@ -48,14 +36,14 @@ class sequence1 extends uvm_sequence #(my_transaction);
          `uvm_do_with(m_trans, {m_trans.pload.size < 500;})
          `uvm_info("sequence1", "send one transaction", UVM_MEDIUM)
       end
-      lock();
-      `uvm_info("sequence1", "locked the sequencer ", UVM_MEDIUM)
+      grab();
+      `uvm_info("sequence1", "grab the sequencer ", UVM_MEDIUM)
       repeat (4) begin
          `uvm_do_with(m_trans, {m_trans.pload.size < 500;})
          `uvm_info("sequence1", "send one transaction", UVM_MEDIUM)
       end
-      `uvm_info("sequence1", "unlocked the sequencer ", UVM_MEDIUM)
-      unlock();
+      `uvm_info("sequence1", "ungrab the sequencer ", UVM_MEDIUM)
+      ungrab();
       repeat (3) begin
          `uvm_do_with(m_trans, {m_trans.pload.size < 500;})
          `uvm_info("sequence1", "send one transaction", UVM_MEDIUM)
