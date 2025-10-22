@@ -2,18 +2,43 @@
 `define MY_CASE0__SV
 class sequence0 extends uvm_sequence #(my_transaction);
    my_transaction m_trans;
+   int num;
+   bit has_delayed;
 
    function  new(string name= "sequence0");
       super.new(name);
+      num = 0;
+      has_delayed = 0;
    endfunction 
-   
+  
+   virtual function bit is_relevant();
+      if((num >= 3)&&(!has_delayed)) return 0;
+      else return 1;
+   endfunction
+
    virtual task body();
       if(starting_phase != null) 
          starting_phase.raise_objection(this);
-      repeat (5) begin
-         `uvm_do(m_trans)
-         `uvm_info("sequence0", "send one transaction", UVM_MEDIUM)
-      end
+      fork
+         repeat (10) begin
+            num++;
+            `uvm_do(m_trans)
+            `uvm_info("sequence0", "send one transaction", UVM_MEDIUM)
+         end
+         while(1) begin
+            if(!has_delayed) begin
+               if(num >= 3) begin
+                  `uvm_info("sequence0", "begin to delay", UVM_MEDIUM)
+                  #500000;
+                  has_delayed = 1'b1;
+                  `uvm_info("sequence0", "end delay", UVM_MEDIUM)
+                  break;
+               end
+               else
+                  #1000;
+            end
+         end
+      join
       #100;
       if(starting_phase != null) 
          starting_phase.drop_objection(this);
@@ -32,20 +57,8 @@ class sequence1 extends uvm_sequence #(my_transaction);
    virtual task body();
       if(starting_phase != null) 
          starting_phase.raise_objection(this);
-      repeat (3) begin
-         `uvm_do_with(m_trans, {m_trans.pload.size < 500;})
-         `uvm_info("sequence1", "send one transaction", UVM_MEDIUM)
-      end
-      grab();
-      `uvm_info("sequence1", "grab the sequencer ", UVM_MEDIUM)
-      repeat (4) begin
-         `uvm_do_with(m_trans, {m_trans.pload.size < 500;})
-         `uvm_info("sequence1", "send one transaction", UVM_MEDIUM)
-      end
-      `uvm_info("sequence1", "ungrab the sequencer ", UVM_MEDIUM)
-      ungrab();
-      repeat (3) begin
-         `uvm_do_with(m_trans, {m_trans.pload.size < 500;})
+      repeat (10) begin
+         `uvm_do_with(m_trans, {m_trans.pload.size == 500;})
          `uvm_info("sequence1", "send one transaction", UVM_MEDIUM)
       end
       #100;
