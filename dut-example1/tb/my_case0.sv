@@ -10,7 +10,19 @@ class sequence0 extends uvm_sequence #(my_transaction);
    virtual task body();
       if(starting_phase != null) 
          starting_phase.raise_objection(this);
+      repeat (2) begin
+         `uvm_do(m_trans)
+         `uvm_info("sequence0", "send one transaction", UVM_MEDIUM)
+      end
+      lock();
+      `uvm_info("sequence0", "locked the sequencer ", UVM_MEDIUM)
       repeat (5) begin
+         `uvm_do(m_trans)
+         `uvm_info("sequence0", "send one transaction", UVM_MEDIUM)
+      end
+      `uvm_info("sequence0", "unlocked the sequencer ", UVM_MEDIUM)
+      unlock();
+      repeat (2) begin
          `uvm_do(m_trans)
          `uvm_info("sequence0", "send one transaction", UVM_MEDIUM)
       end
