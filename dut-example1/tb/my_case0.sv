@@ -16,29 +16,19 @@ class sequence0 extends uvm_sequence #(my_transaction);
       else return 1;
    endfunction
 
+   virtual task wait_for_relevant();
+      #10000;
+      has_delayed = 1;
+   endtask
+
    virtual task body();
       if(starting_phase != null) 
          starting_phase.raise_objection(this);
-      fork
-         repeat (10) begin
-            num++;
-            `uvm_do(m_trans)
-            `uvm_info("sequence0", "send one transaction", UVM_MEDIUM)
-         end
-         while(1) begin
-            if(!has_delayed) begin
-               if(num >= 3) begin
-                  `uvm_info("sequence0", "begin to delay", UVM_MEDIUM)
-                  #500000;
-                  has_delayed = 1'b1;
-                  `uvm_info("sequence0", "end delay", UVM_MEDIUM)
-                  break;
-               end
-               else
-                  #1000;
-            end
-         end
-      join
+      repeat (10) begin
+         num++;
+         `uvm_do(m_trans)
+         `uvm_info("sequence0", "send one transaction", UVM_MEDIUM)
+      end
       #100;
       if(starting_phase != null) 
          starting_phase.drop_objection(this);
