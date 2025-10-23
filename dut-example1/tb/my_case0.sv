@@ -1,20 +1,42 @@
 `ifndef MY_CASE0__SV
 `define MY_CASE0__SV
 class case0_sequence extends uvm_sequence #(my_transaction);
+   my_transaction m_trans;
+   int num;
 
    function  new(string name= "case0_sequence");
       super.new(name);
    endfunction 
-   
-   virtual task body();
+
+   virtual task pre_do(bit is_item);
+      #100;
+      `uvm_info("sequence0", "this is pre_do", UVM_MEDIUM)
+   endtask
+
+   virtual function void mid_do(uvm_sequence_item this_item);
       my_transaction tr;
+      int p_sz;
+      `uvm_info("sequence0", "this is mid_do", UVM_MEDIUM)
+      void'($cast(tr, this_item));
+      p_sz = tr.pload.size();
+      {tr.pload[p_sz - 4],
+       tr.pload[p_sz - 3],
+       tr.pload[p_sz - 2],
+       tr.pload[p_sz - 1]} = num;
+      tr.crc = tr.calc_crc();
+      tr.print();
+   endfunction
+
+   virtual function void post_do(uvm_sequence_item this_item);
+      `uvm_info("sequence0", "this is post_do", UVM_MEDIUM)
+   endfunction
+
+   virtual task body();
       if(starting_phase != null) 
          starting_phase.raise_objection(this);
       repeat (10) begin
-         tr = new("tr");
-         assert(tr.randomize() with {tr.pload.size == 200;});
-         start_item(tr);
-         finish_item(tr);
+         num++;
+         `uvm_do(m_trans)
       end
       #100;
       if(starting_phase != null) 
