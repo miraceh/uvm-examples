@@ -40,10 +40,8 @@ class case0_sequence extends uvm_sequence #(my_transaction);
       if(starting_phase != null) 
          starting_phase.raise_objection(this);
       repeat (10) begin
-         cseq = new("cseq");
-         cseq.start(m_sequencer);
-         lseq = new("lseq");
-         lseq.start(m_sequencer);
+         `uvm_do(cseq)
+         `uvm_do(lseq)
       end
       #100;
       if(starting_phase != null) 
