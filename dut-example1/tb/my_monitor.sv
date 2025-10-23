@@ -43,7 +43,7 @@ task my_monitor::collect_one_pkt(my_transaction tr);
       if(vif.valid) break;
    end
    
-   //`uvm_info("my_monitor", "begin to collect one pkt", UVM_LOW);
+   `uvm_info("my_monitor", "begin to collect one pkt", UVM_LOW);
    while(vif.valid) begin
       data_q.push_back(vif.data);
       @(posedge vif.clk);
@@ -55,7 +55,7 @@ task my_monitor::collect_one_pkt(my_transaction tr);
    end
    tr.pload = new[data_size - 18]; //da sa, e_type, crc
    data_size = tr.unpack_bytes(data_array) / 8; 
-   //`uvm_info("my_monitor", "end collect one pkt", UVM_LOW);
+   `uvm_info("my_monitor", "end collect one pkt", UVM_LOW);
 endtask
 
 
