@@ -2,7 +2,7 @@
 `define MY_CASE0__SV
 
 class long_seq extends uvm_sequence#(my_transaction);
-   rand bit[47:0] ldmac; 
+   rand bit[47:0] dmac; 
    `uvm_object_utils(long_seq)
    function  new(string name= "long_seq");
       super.new(name);
@@ -12,7 +12,7 @@ class long_seq extends uvm_sequence#(my_transaction);
       my_transaction tr;
       `uvm_do_with(tr, {tr.crc_err == 0;
                         tr.pload.size() == 1500;
-                        tr.dmac == ldmac;})
+                        tr.dmac == dmac;})
       tr.print();
    endtask
 endclass
@@ -29,7 +29,7 @@ class case0_sequence extends uvm_sequence #(my_transaction);
       if(starting_phase != null) 
          starting_phase.raise_objection(this);
       repeat (10) begin
-         `uvm_do_with(lseq, {lseq.ldmac == 48'hFFFF;})
+         `uvm_do_with(lseq, {lseq.dmac == 48'hFFFF;})
       end
       #100;
       if(starting_phase != null) 
