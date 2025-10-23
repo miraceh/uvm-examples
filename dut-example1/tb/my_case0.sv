@@ -1,28 +1,20 @@
 `ifndef MY_CASE0__SV
 `define MY_CASE0__SV
 class case0_sequence extends uvm_sequence #(my_transaction);
-   my_transaction m_trans;
 
    function  new(string name= "case0_sequence");
       super.new(name);
    endfunction 
    
    virtual task body();
-      int num = 0;
-      int p_sz;
+      my_transaction tr;
       if(starting_phase != null) 
          starting_phase.raise_objection(this);
       repeat (10) begin
-         num++;
-         `uvm_create(m_trans)
-         assert(m_trans.randomize());
-         p_sz = m_trans.pload.size();
-         {m_trans.pload[p_sz - 4], 
-          m_trans.pload[p_sz - 3], 
-          m_trans.pload[p_sz - 2], 
-          m_trans.pload[p_sz - 1]} 
-          = num; 
-         `uvm_send(m_trans)
+         tr = new("tr");
+         assert(tr.randomize() with {tr.pload.size == 200;});
+         start_item(tr);
+         finish_item(tr);
       end
       #100;
       if(starting_phase != null) 
