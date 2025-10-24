@@ -11,6 +11,7 @@ import uvm_pkg::*;
 `include "my_model.sv"
 `include "my_scoreboard.sv"
 `include "my_env.sv"
+`include "my_vsqr.sv"
 `include "base_test.sv"
 `include "my_case0.sv"
 
