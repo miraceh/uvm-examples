@@ -2,7 +2,8 @@
 
 # Variables
 WORK      = work
-DUT_SRC   = ../dut/dut.sv
+# DUT_SRC   = ../dut/dut.sv
+DUT_SRC   = ../dut/dut2.sv
 TB_SRC    = ../tb/top_tb.sv
 TLM_SRC   = ../tlm/top_tb.sv
 TOP_TB    = top_tb
