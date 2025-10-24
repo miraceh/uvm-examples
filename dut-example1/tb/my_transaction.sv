@@ -9,8 +9,6 @@ class my_transaction extends uvm_sequence_item;
    rand byte      pload[];
    rand bit[31:0] crc;
 
-   rand bit       crc_err;
-
    constraint pload_cons{
       pload.size >= 46;
       pload.size <= 1500;
@@ -21,8 +19,7 @@ class my_transaction extends uvm_sequence_item;
    endfunction
 
    function void post_randomize();
-      if(!crc_err)
-         crc = calc_crc;
+      crc = calc_crc;
    endfunction
 
    `uvm_object_utils_begin(my_transaction)
@@ -31,7 +28,6 @@ class my_transaction extends uvm_sequence_item;
       `uvm_field_int(ether_type, UVM_ALL_ON)
       `uvm_field_array_int(pload, UVM_ALL_ON)
       `uvm_field_int(crc, UVM_ALL_ON)
-      `uvm_field_int(crc_err, UVM_ALL_ON|UVM_NOPACK)
    `uvm_object_utils_end
 
    function new(string name = "my_transaction");

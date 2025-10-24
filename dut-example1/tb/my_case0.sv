@@ -1,35 +1,28 @@
 `ifndef MY_CASE0__SV
 `define MY_CASE0__SV
 
-class long_seq extends uvm_sequence#(my_transaction);
-   rand bit[47:0] dmac; 
-   `uvm_object_utils(long_seq)
-   function  new(string name= "long_seq");
-      super.new(name);
-   endfunction 
-   
-   virtual task body();
-      my_transaction tr;
-      `uvm_do_with(tr, {tr.crc_err == 0;
-                        tr.pload.size() == 1500;
-                        tr.dmac == dmac;})
-      tr.print();
-   endtask
+class your_transaction extends uvm_sequence_item;
+   `uvm_object_utils(your_transaction)
+   function new(string name = "your_transaction");
+      super.new();
+   endfunction
+
 endclass
 
-class case0_sequence extends uvm_sequence #(my_transaction);
+class case0_sequence extends uvm_sequence;
    my_transaction m_trans;
+   your_transaction y_trans;
 
    function  new(string name= "case0_sequence");
       super.new(name);
    endfunction 
    
    virtual task body();
-      long_seq lseq;
       if(starting_phase != null) 
          starting_phase.raise_objection(this);
       repeat (10) begin
-         `uvm_do_with(lseq, {lseq.dmac == 48'hFFFF;})
+         `uvm_do(m_trans)
+         `uvm_do(y_trans)
       end
       #100;
       if(starting_phase != null) 
@@ -38,6 +31,7 @@ class case0_sequence extends uvm_sequence #(my_transaction);
 
    `uvm_object_utils(case0_sequence)
 endclass
+
 
 class my_case0 extends base_test;
 

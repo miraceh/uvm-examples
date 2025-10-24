@@ -1,7 +1,7 @@
 `ifndef MY_SEQUENCER__SV
 `define MY_SEQUENCER__SV
 
-class my_sequencer extends uvm_sequencer #(my_transaction);
+class my_sequencer extends uvm_sequencer #(uvm_sequence_item);
    
    function new(string name, uvm_component parent);
       super.new(name, parent);
