@@ -1,17 +1,9 @@
 `ifndef MY_CASE0__SV
 `define MY_CASE0__SV
-
-class your_transaction extends uvm_sequence_item;
-   `uvm_object_utils(your_transaction)
-   function new(string name = "your_transaction");
-      super.new();
-   endfunction
-
-endclass
-
-class case0_sequence extends uvm_sequence;
+class case0_sequence extends uvm_sequence #(my_transaction);
    my_transaction m_trans;
-   your_transaction y_trans;
+   `uvm_object_utils(case0_sequence)
+   `uvm_declare_p_sequencer(my_sequencer)
 
    function  new(string name= "case0_sequence");
       super.new(name);
@@ -21,15 +13,14 @@ class case0_sequence extends uvm_sequence;
       if(starting_phase != null) 
          starting_phase.raise_objection(this);
       repeat (10) begin
-         `uvm_do(m_trans)
-         `uvm_do(y_trans)
+         `uvm_do_with(m_trans, {m_trans.dmac == p_sequencer.dmac;
+                                m_trans.smac == p_sequencer.smac;})
       end
       #100;
       if(starting_phase != null) 
          starting_phase.drop_objection(this);
    endtask
 
-   `uvm_object_utils(case0_sequence)
 endclass
 
 
@@ -46,6 +37,8 @@ endclass
 function void my_case0::build_phase(uvm_phase phase);
    super.build_phase(phase);
 
+   uvm_config_db#(bit[47:0])::set(this, "env.i_agt.sqr", "dmac", 48'hF9765); 
+   uvm_config_db#(bit[47:0])::set(this, "env.i_agt.sqr", "smac", 48'h89F23); 
    uvm_config_db#(uvm_object_wrapper)::set(this, 
                                            "env.i_agt.sqr.main_phase", 
                                            "default_sequence", 
