@@ -1,17 +1,19 @@
 `ifndef MY_CASE0__SV
 `define MY_CASE0__SV
-class drv0_seq extends uvm_sequence #(my_transaction);
+class read_file_seq extends uvm_sequence #(my_transaction);
    my_transaction m_trans;
-   `uvm_object_utils(drv0_seq)
+   string file_name;
+   `uvm_object_utils(read_file_seq)
 
-   function  new(string name= "drv0_seq");
+   function  new(string name= "read_file_seq");
       super.new(name);
    endfunction 
    
    virtual task body();
+      `uvm_info("read_file_seq", $sformatf("file name is %0s", file_name), UVM_MEDIUM)
       repeat (10) begin
          `uvm_do(m_trans)
-         `uvm_info("drv0_seq", "send one transaction", UVM_MEDIUM)
+         `uvm_info("read_file_seq", "send one transaction", UVM_MEDIUM)
       end
    endtask
 endclass
@@ -41,15 +43,18 @@ class case0_vseq extends uvm_sequence;
 
    virtual task body();
       my_transaction tr;
-      drv0_seq seq0;
+      read_file_seq seq0;
       drv1_seq seq1;
       if(starting_phase != null) 
          starting_phase.raise_objection(this);
       `uvm_do_on_with(tr, p_sequencer.p_sqr0, {tr.pload.size == 1500;})
       `uvm_info("vseq", "send one longest packet on p_sequencer.p_sqr0", UVM_MEDIUM)
+      seq0 = new("seq0");
+      seq0.file_name = "data.txt";
+      seq1 = new("seq1");
       fork
-         `uvm_do_on(seq0, p_sequencer.p_sqr0);
-         `uvm_do_on(seq1, p_sequencer.p_sqr1);
+         seq0.start(p_sequencer.p_sqr0);
+         seq1.start(p_sequencer.p_sqr1);
       join 
       #100;
       if(starting_phase != null) 
