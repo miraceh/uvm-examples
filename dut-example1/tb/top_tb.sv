@@ -22,10 +22,14 @@ reg rst_n;
 
 my_if input_if0(clk, rst_n);
 my_if input_if1(clk, rst_n);
+my_if input_if2(clk, rst_n);
+my_if input_if3(clk, rst_n);
 my_if output_if0(clk, rst_n);
 my_if output_if1(clk, rst_n);
+my_if output_if2(clk, rst_n);
+my_if output_if3(clk, rst_n);
 
-dut my_dut(.clk(clk),
+dut my_dut0(.clk(clk),
            .rst_n(rst_n),
            .rxd0(input_if0.data),
            .rx_dv0(input_if0.valid),
@@ -35,6 +39,17 @@ dut my_dut(.clk(clk),
            .tx_en0(output_if0.valid),
            .txd1(output_if1.data),
            .tx_en1(output_if1.valid));
+
+dut my_dut1(.clk(clk),
+           .rst_n(rst_n),
+           .rxd0(input_if2.data),
+           .rx_dv0(input_if2.valid),
+           .rxd1(input_if3.data),
+           .rx_dv1(input_if3.valid),
+           .txd0(output_if2.data),
+           .tx_en0(output_if2.valid),
+           .txd1(output_if3.data),
+           .tx_en1(output_if3.valid));
 
 initial begin
    clk = 0;
@@ -60,6 +75,12 @@ initial begin
    uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env1.i_agt.drv", "vif", input_if1);
    uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env1.i_agt.mon", "vif", input_if1);
    uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env1.o_agt.mon", "vif", output_if1);
+   uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env2.i_agt.drv", "vif", input_if2);
+   uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env2.i_agt.mon", "vif", input_if2);
+   uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env2.o_agt.mon", "vif", output_if2);
+   uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env3.i_agt.drv", "vif", input_if3);
+   uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env3.i_agt.mon", "vif", input_if3);
+   uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env3.o_agt.mon", "vif", output_if3);
 end
 
 endmodule

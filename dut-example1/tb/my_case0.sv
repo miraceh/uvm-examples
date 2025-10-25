@@ -1,30 +1,17 @@
 `ifndef MY_CASE0__SV
 `define MY_CASE0__SV
-class drv0_seq extends uvm_sequence #(my_transaction);
+class drv_seq extends uvm_sequence #(my_transaction);
    my_transaction m_trans;
-   `uvm_object_utils(drv0_seq)
+   `uvm_object_utils(drv_seq)
 
-   function  new(string name= "drv0_seq");
+   function  new(string name= "drv_seq");
       super.new(name);
    endfunction 
    
    virtual task body();
-      if(starting_phase != null) begin
-         starting_phase.raise_objection(this);
-         `uvm_info("drv0_seq", "raise objection", UVM_MEDIUM)
-      end
-      else begin
-         `uvm_info("drv0_seq", "starting_phase is null, can't raise objection", UVM_MEDIUM)
-      end
       repeat (10) begin
          `uvm_do(m_trans)
-      end
-      if(starting_phase != null) begin
-         starting_phase.drop_objection(this);
-         `uvm_info("drv0_seq", "drop objection", UVM_MEDIUM)
-      end
-      else begin
-         `uvm_info("drv0_seq", "starting_phase is null, can't drop objection", UVM_MEDIUM)
+         `uvm_info("drv_seq", "send one transaction", UVM_MEDIUM)
       end
    endtask
 endclass
@@ -37,10 +24,16 @@ class case0_vseq extends uvm_sequence;
    endfunction
 
    virtual task body();
-      drv0_seq seq0;
+      my_transaction tr;
+      drv_seq dseq[4];
       if(starting_phase != null) 
          starting_phase.raise_objection(this);
-      `uvm_do_on(seq0, p_sequencer.p_sqr0);
+      for(int i = 0; i < 4; i++)
+         fork
+            automatic int j = i;
+            `uvm_do_on(dseq[j], p_sequencer.p_sqr[j]);
+         join_none 
+      wait fork;
       #100;
       if(starting_phase != null) 
          starting_phase.drop_objection(this);
