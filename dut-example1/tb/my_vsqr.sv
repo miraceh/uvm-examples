@@ -3,7 +3,8 @@
 
 class my_vsqr extends uvm_sequencer;
   
-   my_sequencer p_sqr[4];
+   my_sequencer p_sqr0;
+   my_sequencer p_sqr1;
    
    function new(string name, uvm_component parent);
       super.new(name, parent);
