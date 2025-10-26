@@ -1,4 +1,4 @@
-`timescale 1ns/1ns
+`timescale 1ns/1ps
 `include "uvm_macros.svh"
 
 import uvm_pkg::*;
@@ -11,7 +11,6 @@ import uvm_pkg::*;
 `include "my_model.sv"
 `include "my_scoreboard.sv"
 `include "my_env.sv"
-`include "my_vsqr.sv"
 `include "base_test.sv"
 `include "my_case0.sv"
 
@@ -19,37 +18,20 @@ module top_tb;
 
 reg clk;
 reg rst_n;
+reg[7:0] rxd;
+reg rx_dv;
+wire[7:0] txd;
+wire tx_en;
 
-my_if input_if0(clk, rst_n);
-my_if input_if1(clk, rst_n);
-my_if input_if2(clk, rst_n);
-my_if input_if3(clk, rst_n);
-my_if output_if0(clk, rst_n);
-my_if output_if1(clk, rst_n);
-my_if output_if2(clk, rst_n);
-my_if output_if3(clk, rst_n);
+my_if input_if(clk, rst_n);
+my_if output_if(clk, rst_n);
 
-dut my_dut0(.clk(clk),
+dut my_dut(.clk(clk),
            .rst_n(rst_n),
-           .rxd0(input_if0.data),
-           .rx_dv0(input_if0.valid),
-           .rxd1(input_if1.data),
-           .rx_dv1(input_if1.valid),
-           .txd0(output_if0.data),
-           .tx_en0(output_if0.valid),
-           .txd1(output_if1.data),
-           .tx_en1(output_if1.valid));
-
-dut my_dut1(.clk(clk),
-           .rst_n(rst_n),
-           .rxd0(input_if2.data),
-           .rx_dv0(input_if2.valid),
-           .rxd1(input_if3.data),
-           .rx_dv1(input_if3.valid),
-           .txd0(output_if2.data),
-           .tx_en0(output_if2.valid),
-           .txd1(output_if3.data),
-           .tx_en1(output_if3.valid));
+           .rxd(input_if.data),
+           .rx_dv(input_if.valid),
+           .txd(output_if.data),
+           .tx_en(output_if.valid));
 
 initial begin
    clk = 0;
@@ -69,18 +51,9 @@ initial begin
 end
 
 initial begin
-   uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env0.i_agt.drv", "vif", input_if0);
-   uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env0.i_agt.mon", "vif", input_if0);
-   uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env0.o_agt.mon", "vif", output_if0);
-   uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env1.i_agt.drv", "vif", input_if1);
-   uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env1.i_agt.mon", "vif", input_if1);
-   uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env1.o_agt.mon", "vif", output_if1);
-   uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env2.i_agt.drv", "vif", input_if2);
-   uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env2.i_agt.mon", "vif", input_if2);
-   uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env2.o_agt.mon", "vif", output_if2);
-   uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env3.i_agt.drv", "vif", input_if3);
-   uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env3.i_agt.mon", "vif", input_if3);
-   uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env3.o_agt.mon", "vif", output_if3);
+   uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env.i_agt.drv", "vif", input_if);
+   uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env.i_agt.mon", "vif", input_if);
+   uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env.o_agt.mon", "vif", output_if);
 end
 
 endmodule
