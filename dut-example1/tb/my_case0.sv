@@ -2,13 +2,21 @@
 `define MY_CASE0__SV
 class drv0_seq extends uvm_sequence #(my_transaction);
    my_transaction m_trans;
+   bit first_start;
    `uvm_object_utils(drv0_seq)
 
    function  new(string name= "drv0_seq");
       super.new(name);
+      first_start = 1;
    endfunction 
    
    virtual task body();
+      void'(uvm_config_db#(bit)::get(uvm_root::get(), get_full_name(), "first_start", first_start));
+      if(first_start)
+         `uvm_info("drv0_seq", "this is the first start of the sequence", UVM_MEDIUM)
+      else
+         `uvm_info("drv0_seq", "this is not the first start of the sequence", UVM_MEDIUM)
+      uvm_config_db#(bit)::set(uvm_root::get(), "uvm_test_top.v_sqr.*", "first_start", 0);
       repeat (10) begin
          `uvm_do(m_trans)
       end
@@ -44,14 +52,8 @@ class case0_vseq extends uvm_sequence;
       if(starting_phase != null) 
          starting_phase.raise_objection(this);
       fork
-         `uvm_do_on(seq0, p_sequencer.p_sqr0);
-         `uvm_do_on(seq1, p_sequencer.p_sqr1);
-         begin
-            #10000;
-            uvm_config_db#(bit)::set(uvm_root::get(), "uvm_test_top.env0.scb", "cmp_en", 0);
-            #10000;
-            uvm_config_db#(bit)::set(uvm_root::get(), "uvm_test_top.env0.scb", "cmp_en", 1);
-         end
+         repeat(2) `uvm_do_on(seq0, p_sequencer.p_sqr0);
+         repeat(2) `uvm_do_on(seq1, p_sequencer.p_sqr1);
       join 
       #100;
       if(starting_phase != null) 
