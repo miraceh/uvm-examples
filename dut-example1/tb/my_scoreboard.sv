@@ -28,11 +28,6 @@ task my_scoreboard::main_phase(uvm_phase phase);
  
    super.main_phase(phase);
    fork
-      while(1) begin
-         uvm_config_db#(bit)::wait_modified(this, "", "cmp_en");
-         void'(uvm_config_db#(bit)::get(this, "", "cmp_en", cmp_en)); 
-         `uvm_info("my_scoreboard", $sformatf("cmp_en value modified, the new value is %0d", cmp_en), UVM_LOW)
-      end
       while (1) begin
          exp_port.get(get_expect);
          expect_queue.push_back(get_expect);

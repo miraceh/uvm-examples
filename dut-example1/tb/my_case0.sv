@@ -9,6 +9,14 @@ class drv0_seq extends uvm_sequence #(my_transaction);
    endfunction 
    
    virtual task body();
+      bit send_en = 1;
+      fork
+         while(1) begin
+            uvm_config_db#(bit)::wait_modified(null, get_full_name(), "send_en");
+            void'(uvm_config_db#(bit)::get(null, get_full_name, "send_en", send_en)); 
+            `uvm_info("drv0_seq", $sformatf("send_en value modified, the new value is %0d", send_en), UVM_LOW)
+         end
+      join_none
       repeat (10) begin
          `uvm_do(m_trans)
       end
@@ -48,9 +56,9 @@ class case0_vseq extends uvm_sequence;
          `uvm_do_on(seq1, p_sequencer.p_sqr1);
          begin
             #10000;
-            uvm_config_db#(bit)::set(uvm_root::get(), "uvm_test_top.env0.scb", "cmp_en", 0);
+            uvm_config_db#(bit)::set(uvm_root::get(), "uvm_test_top.v_sqr.*", "send_en", 0);
             #10000;
-            uvm_config_db#(bit)::set(uvm_root::get(), "uvm_test_top.env0.scb", "cmp_en", 1);
+            uvm_config_db#(bit)::set(uvm_root::get(), "uvm_test_top.v_sqr.*", "send_en", 1);
          end
       join 
       #100;
