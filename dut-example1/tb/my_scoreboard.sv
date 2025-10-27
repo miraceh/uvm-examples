@@ -24,10 +24,9 @@ endfunction
 task my_scoreboard::main_phase(uvm_phase phase);
    my_transaction  get_expect,  get_actual, tmp_tran;
    bit result;
-   bit cmp_en = 1'b1;
  
    super.main_phase(phase);
-   fork
+   fork 
       while (1) begin
          exp_port.get(get_expect);
          expect_queue.push_back(get_expect);
