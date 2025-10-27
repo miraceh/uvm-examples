@@ -1,6 +1,6 @@
 `ifndef MY_CASE0__SV
 `define MY_CASE0__SV
-class case0_sequence extends uvm_sequence #(my_transaction);
+class case0_sequence extends uvm_sequence #(my_transaction, your_transaction);
    my_transaction m_trans;
 
    function  new(string name= "case0_sequence");
@@ -12,7 +12,8 @@ class case0_sequence extends uvm_sequence #(my_transaction);
          starting_phase.raise_objection(this);
       repeat (10) begin
          `uvm_do(m_trans)
-         `uvm_info("seq", $sformatf("get information from driver: %0s", m_trans.frm_drv), UVM_MEDIUM)
+         get_response(rsp);
+         `uvm_info("seq", $sformatf("response information is: %0s", rsp.information), UVM_MEDIUM)
       end
       #100;
       if(starting_phase != null) 

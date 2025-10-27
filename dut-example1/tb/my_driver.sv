@@ -1,6 +1,6 @@
 `ifndef MY_DRIVER__SV
 `define MY_DRIVER__SV
-class my_driver extends uvm_driver#(my_transaction);
+class my_driver extends uvm_driver#(my_transaction, your_transaction);
 
    virtual my_if vif;
 
@@ -27,7 +27,10 @@ task my_driver::main_phase(uvm_phase phase);
    while(1) begin
       seq_item_port.get_next_item(req);
       drive_one_pkt(req);
-      req.frm_drv = "this is information from driver";
+      rsp = new("rsp");
+      rsp.set_id_info(req);
+      rsp.information = "driver information";
+      seq_item_port.put_response(rsp);
       seq_item_port.item_done();
    end
 endtask

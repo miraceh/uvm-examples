@@ -9,8 +9,6 @@ class my_transaction extends uvm_sequence_item;
    rand byte      pload[];
    rand bit[31:0] crc;
 
-   string frm_drv;
-
    constraint pload_cons{
       pload.size >= 46;
       pload.size <= 1500;
