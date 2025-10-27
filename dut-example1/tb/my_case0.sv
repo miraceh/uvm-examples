@@ -1,28 +1,76 @@
 `ifndef MY_CASE0__SV
 `define MY_CASE0__SV
-class case0_sequence extends uvm_sequence #(my_transaction, your_transaction);
-   my_transaction m_trans;
 
-   function  new(string name= "case0_sequence");
+class simple_seq_library extends uvm_sequence_library#(my_transaction);
+   function  new(string name= "simple_seq_library");
       super.new(name);
-   endfunction 
-   
-   virtual task body();
-      if(starting_phase != null) 
-         starting_phase.raise_objection(this);
-      repeat (10) begin
-         `uvm_do(m_trans)
-         get_response(rsp);
-         `uvm_info("seq", $sformatf("response information is: %0s", rsp.information), UVM_MEDIUM)
-      end
-      #100;
-      if(starting_phase != null) 
-         starting_phase.drop_objection(this);
-   endtask
+      init_sequence_library();
+   endfunction
 
-   `uvm_object_utils(case0_sequence)
+   `uvm_object_utils(simple_seq_library)
+   `uvm_sequence_library_utils(simple_seq_library);
+
 endclass
 
+class seq0 extends uvm_sequence#(my_transaction);
+   function  new(string name= "seq0");
+      super.new(name);
+   endfunction
+
+   `uvm_object_utils(seq0)
+   `uvm_add_to_seq_lib(seq0, simple_seq_library)
+   virtual task body();
+      repeat(10) begin
+         `uvm_do(req)
+         `uvm_info("seq0", "this is seq0", UVM_MEDIUM)
+      end
+   endtask 
+endclass
+
+class seq1 extends uvm_sequence#(my_transaction);
+   function  new(string name= "seq1");
+      super.new(name);
+   endfunction
+
+   `uvm_object_utils(seq1)
+   `uvm_add_to_seq_lib(seq1, simple_seq_library)
+   virtual task body();
+      repeat(10) begin
+         `uvm_do(req)
+         `uvm_info("seq1", "this is seq1", UVM_MEDIUM)
+      end
+   endtask 
+endclass
+
+class seq2 extends uvm_sequence#(my_transaction);
+   function  new(string name= "seq2");
+      super.new(name);
+   endfunction
+
+   `uvm_object_utils(seq2)
+   `uvm_add_to_seq_lib(seq2, simple_seq_library)
+   virtual task body();
+      repeat(10) begin
+         `uvm_do(req)
+         `uvm_info("seq2", "this is seq2", UVM_MEDIUM)
+      end
+   endtask 
+endclass
+
+class seq3 extends uvm_sequence#(my_transaction);
+   function  new(string name= "seq3");
+      super.new(name);
+   endfunction
+
+   `uvm_object_utils(seq3)
+   `uvm_add_to_seq_lib(seq3, simple_seq_library)
+   virtual task body();
+      repeat(10) begin
+         `uvm_do(req)
+         `uvm_info("seq3", "this is seq3", UVM_MEDIUM)
+      end
+   endtask 
+endclass
 
 class my_case0 extends base_test;
 
@@ -40,7 +88,7 @@ function void my_case0::build_phase(uvm_phase phase);
    uvm_config_db#(uvm_object_wrapper)::set(this, 
                                            "env.i_agt.sqr.main_phase", 
                                            "default_sequence", 
-                                           case0_sequence::type_id::get());
+                                           simple_seq_library::type_id::get());
 endfunction
 
 `endif
