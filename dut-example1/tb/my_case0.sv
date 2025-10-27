@@ -7,24 +7,12 @@ class case0_sequence extends uvm_sequence #(my_transaction);
       super.new(name);
    endfunction 
    
-   virtual task pre_body();
-      use_response_handler(1);
-   endtask
-  
-   virtual function void response_handler(uvm_sequence_item response);
-      if(!$cast(rsp, response))
-         `uvm_error("seq", "can't cast")
-      else begin
-         `uvm_info("seq", "get one response", UVM_MEDIUM)
-         rsp.print();
-      end
-   endfunction
-
    virtual task body();
       if(starting_phase != null) 
          starting_phase.raise_objection(this);
       repeat (10) begin
          `uvm_do(m_trans)
+         `uvm_info("seq", $sformatf("get information from driver: %0s", m_trans.frm_drv), UVM_MEDIUM)
       end
       #100;
       if(starting_phase != null) 

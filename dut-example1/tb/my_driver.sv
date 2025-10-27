@@ -27,9 +27,7 @@ task my_driver::main_phase(uvm_phase phase);
    while(1) begin
       seq_item_port.get_next_item(req);
       drive_one_pkt(req);
-      rsp = new("rsp");
-      rsp.set_id_info(req);
-      seq_item_port.put_response(rsp);
+      req.frm_drv = "this is information from driver";
       seq_item_port.item_done();
    end
 endtask
