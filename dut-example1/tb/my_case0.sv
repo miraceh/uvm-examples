@@ -10,6 +10,22 @@ class simple_seq_library extends uvm_sequence_library#(my_transaction);
    `uvm_object_utils(simple_seq_library)
    `uvm_sequence_library_utils(simple_seq_library);
 
+   virtual function int unsigned select_sequence(int unsigned max);
+      static int unsigned index[$];
+      static bit inited;
+      int value;
+      if(!inited) begin
+         for(int i = 0; i <= max; i++) begin
+            if((sequences[i].get_type_name() == "seq0") ||
+               (sequences[i].get_type_name() == "seq1") ||
+               (sequences[i].get_type_name() == "seq3"))
+               index.push_back(i);
+         end
+         inited = 1;
+      end
+      value = $urandom_range(0, index.size() - 1);
+      return index[value];
+   endfunction
 endclass
 
 class seq0 extends uvm_sequence#(my_transaction);
@@ -92,7 +108,7 @@ function void my_case0::build_phase(uvm_phase phase);
    uvm_config_db#(uvm_sequence_lib_mode)::set(this, 
                                            "env.i_agt.sqr.main_phase", 
                                            "default_sequence.selection_mode", 
-                                           UVM_SEQ_LIB_RANDC);
+                                           UVM_SEQ_LIB_USER);
 endfunction
 
 `endif
