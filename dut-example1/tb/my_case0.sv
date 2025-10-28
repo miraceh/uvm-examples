@@ -83,19 +83,17 @@ endclass
 
 
 function void my_case0::build_phase(uvm_phase phase);
-   uvm_sequence_library_cfg cfg;
+   simple_seq_library seq_lib;
    super.build_phase(phase);
 
-   cfg = new("cfg", UVM_SEQ_LIB_RANDC, 5, 20);
-   
-   uvm_config_db#(uvm_object_wrapper)::set(this, 
+   seq_lib = new("seq_lib");
+   seq_lib.selection_mode = UVM_SEQ_LIB_RANDC;
+   seq_lib.min_random_count = 10;
+   seq_lib.max_random_count = 15; 
+   uvm_config_db#(uvm_sequence_base)::set(this, 
                                            "env.i_agt.sqr.main_phase", 
                                            "default_sequence", 
-                                           simple_seq_library::type_id::get());
-   uvm_config_db#(uvm_sequence_library_cfg)::set(this, 
-                                           "env.i_agt.sqr.main_phase", 
-                                           "default_sequence.config", 
-                                           cfg);
+                                           seq_lib);
 endfunction
 
 `endif
