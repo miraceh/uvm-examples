@@ -89,6 +89,10 @@ function void my_case0::build_phase(uvm_phase phase);
                                            "env.i_agt.sqr.main_phase", 
                                            "default_sequence", 
                                            simple_seq_library::type_id::get());
+   uvm_config_db#(uvm_sequence_lib_mode)::set(this, 
+                                           "env.i_agt.sqr.main_phase", 
+                                           "default_sequence.selection_mode", 
+                                           UVM_SEQ_LIB_RANDC);
 endfunction
 
 `endif
