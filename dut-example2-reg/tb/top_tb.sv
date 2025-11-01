@@ -14,6 +14,8 @@ import uvm_pkg::*;
 `include "bus_driver.sv"
 `include "bus_monitor.sv"
 `include "bus_agent.sv"
+`include "reg_model.sv"
+`include "my_adapter.sv"
 `include "my_model.sv"
 `include "my_scoreboard.sv"
 `include "my_env.sv"
