@@ -8,8 +8,6 @@ class my_env extends uvm_env;
    bus_agent  bus_agt;
    my_model   mdl;
    my_scoreboard scb;
-
-   reg_model  p_rm;
    
    uvm_tlm_analysis_fifo #(my_transaction) agt_scb_fifo;
    uvm_tlm_analysis_fifo #(my_transaction) agt_mdl_fifo;
@@ -48,7 +46,7 @@ function void my_env::connect_phase(uvm_phase phase);
    scb.exp_port.connect(mdl_scb_fifo.blocking_get_export);
    o_agt.ap.connect(agt_scb_fifo.analysis_export);
    scb.act_port.connect(agt_scb_fifo.blocking_get_export); 
-   mdl.p_rm = this.p_rm;
+   mdl.p_sqr = bus_agt.sqr;
 endfunction
 
 `endif

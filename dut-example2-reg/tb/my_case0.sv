@@ -16,6 +16,29 @@ class case0_sequence extends uvm_sequence #(my_transaction);
    `uvm_object_utils(case0_sequence)
 endclass
 
+class case0_bus_seq extends uvm_sequence #(bus_transaction);
+   bus_transaction m_trans;
+
+   function  new(string name= "case0_bus_seq");
+      super.new(name);
+   endfunction 
+   
+   virtual task body();
+     `uvm_do_with(m_trans, {m_trans.addr == 16'h9;
+                            m_trans.bus_op == BUS_RD;})
+     `uvm_info("case0_bus_seq", $sformatf("invert's initial value is %0h", m_trans.rd_data), UVM_LOW)
+     `uvm_do_with(m_trans, {m_trans.addr == 16'h9;
+                            m_trans.bus_op == BUS_WR;
+                            m_trans.wr_data == 16'h1;})
+     `uvm_do_with(m_trans, {m_trans.addr == 16'h9;
+                            m_trans.bus_op == BUS_RD;})
+     `uvm_info("case0_bus_seq", $sformatf("after set, invert's value is %0h", m_trans.rd_data), UVM_LOW)
+   endtask
+
+   `uvm_object_utils(case0_bus_seq)
+endclass
+
+
 class case0_cfg_vseq extends uvm_sequence;
 
    `uvm_object_utils(case0_cfg_vseq)
@@ -26,15 +49,12 @@ class case0_cfg_vseq extends uvm_sequence;
    endfunction 
    
    virtual task body();
-      uvm_status_e   status;
-      uvm_reg_data_t value;
+      case0_bus_seq  bseq;
       if(starting_phase != null) 
          starting_phase.raise_objection(this);
-      p_sequencer.p_rm.invert.read(status, value, UVM_FRONTDOOR);
-      `uvm_info("case0_cfg_vseq", $sformatf("invert's initial value is %0h", value), UVM_LOW)
-      p_sequencer.p_rm.invert.write(status, 1, UVM_FRONTDOOR);
-      p_sequencer.p_rm.invert.read(status, value, UVM_FRONTDOOR);
-      `uvm_info("case0_cfg_vseq", $sformatf("after set, invert's value is %0h", value), UVM_LOW)
+      bseq = case0_bus_seq::type_id::create("bseq");
+      bseq.start(p_sequencer.p_bus_sqr);
+      
       if(starting_phase != null) 
          starting_phase.drop_objection(this);
    endtask
@@ -52,8 +72,6 @@ class case0_vseq extends uvm_sequence;
    
    virtual task body();
       case0_sequence dseq;
-      uvm_status_e   status;
-      uvm_reg_data_t value;
       if(starting_phase != null) 
          starting_phase.raise_objection(this);
       #10000;

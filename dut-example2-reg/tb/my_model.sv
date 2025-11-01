@@ -6,7 +6,7 @@ class my_model extends uvm_component;
    uvm_blocking_get_port #(my_transaction)  port;
    uvm_analysis_port #(my_transaction)  ap;
 
-   reg_model p_rm;
+   bus_sequencer p_sqr;
    extern function new(string name, uvm_component parent);
    extern function void build_phase(uvm_phase phase);
    extern virtual  task main_phase(uvm_phase phase);
@@ -37,17 +37,19 @@ endfunction
 task my_model::main_phase(uvm_phase phase);
    my_transaction tr;
    my_transaction new_tr;
-   uvm_status_e status;
-   uvm_reg_data_t value;
+   reg_access_sequence reg_seq;
    super.main_phase(phase);
-   p_rm.invert.read(status, value, UVM_FRONTDOOR);
+   reg_seq = new("reg_seq");
+   reg_seq.addr = 16'h9;
+   reg_seq.is_wr = 0;
+   reg_seq.start(p_sqr);
    while(1) begin
       port.get(tr);
       new_tr = new("new_tr");
       new_tr.copy(tr);
       //`uvm_info("my_model", "get one transaction, copy and print it:", UVM_LOW)
       //new_tr.print();
-      if(value)
+      if(reg_seq.rdata)
          invert_tr(new_tr);
       ap.write(new_tr);
    end
