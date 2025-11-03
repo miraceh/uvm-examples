@@ -54,7 +54,7 @@ task bus_driver::drive_one_pkt(bus_transaction tr);
       //$display("@%0t, rd_data is %0h", $time, tr.rd_data);
    end
 
-   `uvm_info("bus_driver", "end drive one pkt", UVM_LOW);
+   //`uvm_info("bus_driver", "end drive one pkt", UVM_LOW);
 endtask
 
 

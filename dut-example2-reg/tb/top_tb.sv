@@ -3,7 +3,6 @@
 
 import uvm_pkg::*;
 `include "my_if.sv"
-`include "backdoor_if.sv"
 `include "bus_if.sv"
 `include "my_transaction.sv"
 `include "my_sequencer.sv"
@@ -15,6 +14,8 @@ import uvm_pkg::*;
 `include "bus_driver.sv"
 `include "bus_monitor.sv"
 `include "bus_agent.sv"
+`include "reg_model.sv"
+`include "my_adapter.sv"
 `include "my_model.sv"
 `include "my_scoreboard.sv"
 `include "my_env.sv"
@@ -33,8 +34,6 @@ wire tx_en;
 
 my_if input_if(clk, rst_n);
 my_if output_if(clk, rst_n);
-
-backdoor_if bk_if(clk, rst_n);
 
 bus_if b_if(clk, rst_n);
 
@@ -73,7 +72,6 @@ initial begin
    uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env.o_agt.mon", "vif", output_if);
    uvm_config_db#(virtual bus_if)::set(null, "uvm_test_top.env.bus_agt.drv", "vif", b_if);
    uvm_config_db#(virtual bus_if)::set(null, "uvm_test_top.env.bus_agt.mon", "vif", b_if);
-   uvm_config_db#(virtual backdoor_if)::set(null, "uvm_test_top", "vif", bk_if);
 end
 
 initial begin
