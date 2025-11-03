@@ -81,13 +81,14 @@ endclass
 
 class my_case0 extends base_test;
 
+   virtual backdoor_if vif;
    function new(string name = "my_case0", uvm_component parent = null);
       super.new(name,parent);
    endfunction 
    extern virtual function void build_phase(uvm_phase phase); 
+   extern virtual task configure_phase(uvm_phase phase); 
    `uvm_component_utils(my_case0)
 endclass
-
 
 function void my_case0::build_phase(uvm_phase phase);
    super.build_phase(phase);
@@ -96,6 +97,14 @@ function void my_case0::build_phase(uvm_phase phase);
                                            "v_sqr.main_phase", 
                                            "default_sequence", 
                                            case0_vseq::type_id::get());
+   void'(uvm_config_db#(virtual backdoor_if)::get(this, "", "vif", vif));
 endfunction
+
+task my_case0::configure_phase(uvm_phase phase);
+   phase.raise_objection(this);
+   @(posedge vif.rst_n);
+   vif.poke_counter(32'hFFFD);
+   phase.drop_objection(this);
+endtask
 
 `endif
