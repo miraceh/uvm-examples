@@ -14,7 +14,6 @@ import uvm_pkg::*;
 `include "bus_driver.sv"
 `include "bus_monitor.sv"
 `include "bus_agent.sv"
-`include "reg_access_sequence.sv"
 `include "my_model.sv"
 `include "my_scoreboard.sv"
 `include "my_env.sv"
@@ -47,6 +46,11 @@ dut my_dut(.clk          (clk               ),
            .rx_dv        (input_if.valid    ),
            .txd          (output_if.data    ),
            .tx_en        (output_if.valid   ));
+
+initial begin
+   @(posedge rst_n);
+   my_dut.counter = 32'hFFFD;
+end
 
 initial begin
    clk = 0;

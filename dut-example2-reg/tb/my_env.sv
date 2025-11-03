@@ -46,7 +46,6 @@ function void my_env::connect_phase(uvm_phase phase);
    scb.exp_port.connect(mdl_scb_fifo.blocking_get_export);
    o_agt.ap.connect(agt_scb_fifo.analysis_export);
    scb.act_port.connect(agt_scb_fifo.blocking_get_export); 
-   mdl.p_sqr = bus_agt.sqr;
 endfunction
 
 `endif
