@@ -30,13 +30,18 @@ class case0_cfg_vseq extends uvm_sequence;
       uvm_reg_data_t value;
       if(starting_phase != null) 
          starting_phase.raise_objection(this);
-      p_sequencer.p_rm.gb_ins.invert.read(status, value, UVM_FRONTDOOR);
+      p_sequencer.p_rm.invert.read(status, value, UVM_FRONTDOOR);
       `uvm_info("case0_cfg_vseq", $sformatf("invert's initial value is %0h", value), UVM_LOW)
-      p_sequencer.p_rm.gb_ins.invert.write(status, 1, UVM_FRONTDOOR);
-      p_sequencer.p_rm.gb_ins.invert.read(status, value, UVM_FRONTDOOR);
+      p_sequencer.p_rm.invert.write(status, 1, UVM_FRONTDOOR);
+      p_sequencer.p_rm.invert.read(status, value, UVM_FRONTDOOR);
       `uvm_info("case0_cfg_vseq", $sformatf("after set, invert's value is %0h", value), UVM_LOW)
-      p_sequencer.p_rm.bb_ins.depth.read(status, value, UVM_FRONTDOOR);
-      `uvm_info("case0_cfg_vseq", $sformatf("not existed reg depth's read value is %0h", value), UVM_LOW)
+      p_sequencer.p_rm.counter.read(status, value, UVM_FRONTDOOR);
+      `uvm_info("case0_cfg_vseq", $sformatf("counter's initial value(FRONTDOOR) is %0h", value), UVM_LOW)
+      p_sequencer.p_rm.counter.poke(status, 32'h1FFFD);
+      p_sequencer.p_rm.counter.read(status, value, UVM_FRONTDOOR);
+      `uvm_info("case0_cfg_vseq", $sformatf("after poke, counter's value(FRONTDOOR) is %0h", value), UVM_LOW)
+      p_sequencer.p_rm.counter.peek(status, value);
+      `uvm_info("case0_cfg_vseq", $sformatf("after poke, counter's value(BACKDOOR) is %0h", value), UVM_LOW)
       if(starting_phase != null) 
          starting_phase.drop_objection(this);
    endtask

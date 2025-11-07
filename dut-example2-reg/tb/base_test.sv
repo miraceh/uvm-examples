@@ -28,6 +28,7 @@ function void base_test::build_phase(uvm_phase phase);
    rm.build();
    rm.lock_model();
    rm.reset();
+   rm.set_hdl_path_root("top_tb.my_dut");
    reg_sqr_adapter = new("reg_sqr_adapter");
    env.p_rm = this.rm;
 endfunction
