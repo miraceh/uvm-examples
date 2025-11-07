@@ -55,50 +55,6 @@ class reg_vlan extends uvm_reg;
     endfunction
 endclass
 
-class reg_regA extends uvm_reg;
-
-    rand uvm_reg_field reg_data;
-
-    virtual function void build();
-        reg_data = uvm_reg_field::type_id::create("reg_data");
-        // parameter: parent, size, lsb_pos, access, volatile, reset value, has_reset, is_rand, individually accessible
-        reg_data.configure(this, 10, 0, "RW", 1, 0, 1, 1, 0);
-    endfunction
-
-    `uvm_object_utils(reg_regA)
-
-    function new(input string name="reg_regA");
-        //parameter: name, size, has_coverage
-        super.new(name, 16, UVM_NO_COVERAGE);
-    endfunction
-endclass
-
-class reg_regB extends uvm_reg;
-
-    rand uvm_reg_field reg_data;
-
-    virtual function void build();
-        reg_data = uvm_reg_field::type_id::create("reg_data");
-        // parameter: parent, size, lsb_pos, access, volatile, reset value, has_reset, is_rand, individually accessible
-        reg_data.configure(this, 10, 0, "RW", 1, 0, 1, 1, 0);
-    endfunction
-
-    `uvm_object_utils(reg_regB)
-
-    function new(input string name="reg_regB");
-        //parameter: name, size, has_coverage
-        super.new(name, 16, UVM_NO_COVERAGE);
-    endfunction
-endclass
-
-class regfile extends uvm_reg_file;
-   function new(string name = "regfile");
-      super.new(name);
-   endfunction
-
-   `uvm_object_utils(regfile)
-endclass
-
 class global_blk extends uvm_reg_block;
    rand reg_invert invert;
    
@@ -139,36 +95,48 @@ class buf_blk extends uvm_reg_block;
    
 endclass
 
+class three_field_reg extends uvm_reg;
+    rand uvm_reg_field fieldA;
+    rand uvm_reg_field fieldB;
+    rand uvm_reg_field fieldC;
+
+    virtual function void build();
+        fieldA = uvm_reg_field::type_id::create("fieldA");
+        fieldB = uvm_reg_field::type_id::create("fieldB");
+        fieldC = uvm_reg_field::type_id::create("fieldC");
+    endfunction
+    
+   `uvm_object_utils(three_field_reg)
+
+    function new(input string name="three_field_reg");
+        //parameter: name, size, has_coverage
+        super.new(name, 16, UVM_NO_COVERAGE);
+    endfunction
+endclass
+
 class mac_blk extends uvm_reg_block;
 
-   rand regfile file_a;
-   rand regfile file_b;
-   rand reg_regA regA;
-   rand reg_regB regB;
    rand reg_vlan vlan;
+   rand three_field_reg tf_reg;
    
    virtual function void build();
       default_map = create_map("default_map", 0, 2, UVM_BIG_ENDIAN, 0);
 
-      file_a = regfile::type_id::create("file_a", , get_full_name());
-      file_a.configure(this, null, "fileA");
-      file_b = regfile::type_id::create("file_b", , get_full_name());
-      file_b.configure(this, null, "fileB");
-      
-      regA = reg_regA::type_id::create("regA", , get_full_name());
-      regA.configure(this, file_a, "regA");
-      regA.build();
-      default_map.add_reg(regA, 'h31, "RW");
-      
-      regB = reg_regB::type_id::create("regB", , get_full_name());
-      regB.configure(this, file_b, "regB");
-      regB.build();
-      default_map.add_reg(regB, 'h32, "RW");
-      
       vlan = reg_vlan::type_id::create("vlan", , get_full_name());
       vlan.configure(this, null, "vlan");
       vlan.build();
       default_map.add_reg(vlan, 'h40, "RW");
+      
+      tf_reg = three_field_reg::type_id::create("tf_reg", , get_full_name());
+      tf_reg.configure(this, null, "");
+      tf_reg.build();
+      tf_reg.fieldA.configure(tf_reg, 2, 0, "RW", 1, 0, 1, 1, 1);
+      tf_reg.add_hdl_path_slice("fieldA", 0, 2);
+      tf_reg.fieldB.configure(tf_reg, 3, 2, "RW", 1, 0, 1, 1, 1);
+      tf_reg.add_hdl_path_slice("fieldB", 2, 3);
+      tf_reg.fieldC.configure(tf_reg, 4, 5, "RW", 1, 0, 1, 1, 1);
+      tf_reg.add_hdl_path_slice("fieldC", 5, 4);
+      default_map.add_reg(tf_reg, 'h41, "RW");
    endfunction
 
     `uvm_object_utils(mac_blk)
