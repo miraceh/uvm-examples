@@ -37,9 +37,18 @@ class reg_counter extends uvm_reg;
     endfunction
 endclass
 
+class my_memory extends uvm_mem;
+   function new(string name="my_memory");
+      super.new(name, 1024, 16);
+   endfunction
+
+   `uvm_object_utils(my_memory)
+endclass
+
 class reg_model extends uvm_reg_block;
    rand reg_invert invert;
    rand reg_counter counter;
+   rand my_memory mm;
 
    virtual function void build();
       default_map = create_map("default_map", 0, 2, UVM_BIG_ENDIAN, 0);
@@ -53,6 +62,10 @@ class reg_model extends uvm_reg_block;
       counter.configure(this, null, "counter");
       counter.build();
       default_map.add_reg(counter, 'h5, "RW");
+
+      mm = my_memory::type_id::create("mm", , get_full_name());
+      mm.configure(this, "stat_blk.ram1024x16_inst.array");
+      default_map.add_mem(mm, 'h100);
    endfunction
 
    `uvm_object_utils(reg_model)
