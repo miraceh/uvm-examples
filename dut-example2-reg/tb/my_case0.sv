@@ -26,9 +26,7 @@ class case0_cfg_vseq extends uvm_sequence;
    endfunction 
    
    virtual task body();
-      uvm_status_e   status;
-      uvm_reg_data_t value;
-      uvm_reg_mem_hdl_paths_seq ckseq;
+      uvm_reg_hw_reset_seq ckseq;
       if(starting_phase != null) 
          starting_phase.raise_objection(this);
       ckseq = new("ckseq");
@@ -87,6 +85,11 @@ function void my_case0::build_phase(uvm_phase phase);
                                            "v_sqr.main_phase", 
                                            "default_sequence", 
                                            case0_vseq::type_id::get());
+   uvm_resource_db#(bit)::set({"REG::",rm.invert.get_full_name(),".*"},
+                              "NO_REG_TESTS", 1, this);
+   uvm_resource_db#(bit)::set({"REG::",rm.invert.get_full_name(),".*"},
+                              "NO_REG_HW_RESET_TEST", 1, this);
+
 endfunction
 
 `endif
