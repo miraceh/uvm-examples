@@ -26,12 +26,16 @@ class case0_cfg_vseq extends uvm_sequence;
    endfunction 
    
    virtual task body();
-      uvm_reg_hw_reset_seq ckseq;
+      uvm_reg_access_seq ckseq;
+      uvm_mem_access_seq ckseq2;
       if(starting_phase != null) 
          starting_phase.raise_objection(this);
       ckseq = new("ckseq");
       ckseq.model = p_sequencer.p_rm;
       ckseq.start(null);
+      ckseq2 = new("ckseq2");
+      ckseq2.model = p_sequencer.p_rm;
+      ckseq2.start(null);
       if(starting_phase != null) 
          starting_phase.drop_objection(this);
    endtask
@@ -85,10 +89,19 @@ function void my_case0::build_phase(uvm_phase phase);
                                            "v_sqr.main_phase", 
                                            "default_sequence", 
                                            case0_vseq::type_id::get());
+   //set for reg access sequence
    uvm_resource_db#(bit)::set({"REG::",rm.invert.get_full_name(),".*"},
                               "NO_REG_TESTS", 1, this);
    uvm_resource_db#(bit)::set({"REG::",rm.invert.get_full_name(),".*"},
-                              "NO_REG_HW_RESET_TEST", 1, this);
+                              "NO_REG_ACCESS_TEST", 1, this);
+   
+   //set for mem access sequence
+   uvm_resource_db#(bit)::set({"REG::",rm.get_full_name(),".*"},
+                              "NO_REG_TESTS", 1, this);
+   uvm_resource_db#(bit)::set({"REG::",rm.get_full_name(),".*"},
+                              "NO_MEM_TESTS", 1, this);
+   uvm_resource_db#(bit)::set({"REG::",rm.invert.get_full_name(),".*"},
+                              "NO_MEM_ACCESS_TEST", 1, this);
 
 endfunction
 
