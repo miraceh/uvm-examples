@@ -28,25 +28,12 @@ class case0_cfg_vseq extends uvm_sequence;
    virtual task body();
       uvm_status_e   status;
       uvm_reg_data_t value;
+      uvm_reg_mem_hdl_paths_seq ckseq;
       if(starting_phase != null) 
          starting_phase.raise_objection(this);
-      p_sequencer.p_rm.invert.read(status, value, UVM_FRONTDOOR);
-      //`uvm_info("case0_cfg_vseq", $sformatf("invert's initial value is %0h", value), UVM_LOW)
-      //p_sequencer.p_rm.invert.write(status, 1, UVM_FRONTDOOR);
-      //p_sequencer.p_rm.invert.read(status, value, UVM_FRONTDOOR);
-      //`uvm_info("case0_cfg_vseq", $sformatf("after set, invert's value is %0h", value), UVM_LOW)
-      p_sequencer.p_rm.invert.set(16'h1);
-      value = p_sequencer.p_rm.invert.get();
-      `uvm_info("case0_cfg_vseq", $sformatf("invert's desired value is %0h", value), UVM_LOW)
-      value = p_sequencer.p_rm.invert.get_mirrored_value();
-      `uvm_info("case0_cfg_vseq", $sformatf("invert's mirrored value is %0h", value), UVM_LOW)
-      p_sequencer.p_rm.invert.update(status, UVM_FRONTDOOR);
-      value = p_sequencer.p_rm.invert.get();
-      `uvm_info("case0_cfg_vseq", $sformatf("invert's desired value is %0h", value), UVM_LOW)
-      value = p_sequencer.p_rm.invert.get_mirrored_value();
-      `uvm_info("case0_cfg_vseq", $sformatf("invert's mirrored value is %0h", value), UVM_LOW)
-      p_sequencer.p_rm.invert.peek(status, value);
-      `uvm_info("case0_cfg_vseq", $sformatf("invert's actual value is %0h", value), UVM_LOW)
+      ckseq = new("ckseq");
+      ckseq.model = p_sequencer.p_rm;
+      ckseq.start(null);
       if(starting_phase != null) 
          starting_phase.drop_objection(this);
    endtask
