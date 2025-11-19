@@ -7,7 +7,10 @@ class base_test extends uvm_test;
    my_vsqr        v_sqr;
    reg_model      rm;
    my_adapter     reg_sqr_adapter;
+   my_adapter     mon_reg_adapter;
 
+   uvm_reg_predictor#(bus_transaction) reg_predictor;
+   
    function new(string name = "base_test", uvm_component parent = null);
       super.new(name,parent);
    endfunction
@@ -28,8 +31,9 @@ function void base_test::build_phase(uvm_phase phase);
    rm.build();
    rm.lock_model();
    rm.reset();
-   rm.set_hdl_path_root("top_tb.my_dut");
    reg_sqr_adapter = new("reg_sqr_adapter");
+   mon_reg_adapter = new("mon_reg_adapter");
+   reg_predictor = new("reg_predictor", this);
    env.p_rm = this.rm;
 endfunction
 
@@ -40,6 +44,9 @@ function void base_test::connect_phase(uvm_phase phase);
    v_sqr.p_rm = this.rm;
    rm.default_map.set_sequencer(env.bus_agt.sqr, reg_sqr_adapter);
    rm.default_map.set_auto_predict(1);
+   reg_predictor.map = rm.default_map;
+   reg_predictor.adapter = mon_reg_adapter;
+   env.bus_agt.ap.connect(reg_predictor.bus_in);
 endfunction
 
 function void base_test::report_phase(uvm_phase phase);
