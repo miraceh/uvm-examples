@@ -39,6 +39,8 @@ task my_model::main_phase(uvm_phase phase);
    my_transaction new_tr;
    uvm_status_e status;
    uvm_reg_data_t value;
+   int length;
+   bit[31:0] counter;
    super.main_phase(phase);
    p_rm.invert.read(status, value, UVM_FRONTDOOR);
    while(1) begin
@@ -49,6 +51,10 @@ task my_model::main_phase(uvm_phase phase);
       //new_tr.print();
       if(value)
          invert_tr(new_tr);
+      counter = p_rm.counter.get();
+      length = new_tr.pload.size() + 18;
+      counter = counter + length;
+      p_rm.counter.predict(counter); 
       ap.write(new_tr);
    end
 endtask

@@ -59,7 +59,11 @@ class case0_vseq extends uvm_sequence;
       #10000;
       dseq = case0_sequence::type_id::create("dseq");
       dseq.start(p_sequencer.p_my_sqr);
-      
+      #100000;
+      p_sequencer.p_rm.counter.mirror(status, UVM_CHECK, UVM_FRONTDOOR); 
+
+      p_sequencer.p_rm.counter.peek(status, value);
+      `uvm_info("case0_vseq", $sformatf("counter's value is %0h", value), UVM_LOW)
       if(starting_phase != null) 
          starting_phase.drop_objection(this);
    endtask
