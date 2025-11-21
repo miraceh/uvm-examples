@@ -28,13 +28,34 @@ class case0_cfg_vseq extends uvm_sequence;
    virtual task body();
       uvm_status_e   status;
       uvm_reg_data_t value;
+      bit[31:0] counter;
+      uvm_reg_block blks[$];
+      reg_model p_rm;
       if(starting_phase != null) 
          starting_phase.raise_objection(this);
-      p_sequencer.p_rm.invert.read(status, value, UVM_FRONTDOOR);
+      uvm_reg_block::get_root_blocks(blks);
+      if(blks.size() == 0)
+          `uvm_fatal("case0_cfg_vseq", "can't find root blocks")
+      else begin
+         if(!$cast(p_rm, blks[0]))
+             `uvm_fatal("case0_cfg_vseq", "can't cast to reg_model")
+      end
+          
+      p_rm.invert.read(status, value, UVM_FRONTDOOR);
       `uvm_info("case0_cfg_vseq", $sformatf("invert's initial value is %0h", value), UVM_LOW)
-      p_sequencer.p_rm.invert.write(status, 1, UVM_FRONTDOOR);
-      p_sequencer.p_rm.invert.read(status, value, UVM_FRONTDOOR);
+      p_rm.invert.write(status, 1, UVM_FRONTDOOR);
+      p_rm.invert.read(status, value, UVM_FRONTDOOR);
       `uvm_info("case0_cfg_vseq", $sformatf("after set, invert's value is %0h", value), UVM_LOW)
+      p_rm.counter.read(status, value, UVM_FRONTDOOR);
+      counter = value;
+      `uvm_info("case0_cfg_vseq", $sformatf("counter's initial value(FRONTDOOR) is %0h", counter), UVM_LOW)
+      p_rm.counter.poke(status, 32'hFFFD);
+      p_rm.counter.read(status, value, UVM_FRONTDOOR);
+      counter = value;
+      `uvm_info("case0_cfg_vseq", $sformatf("after poke, counter's value(FRONTDOOR) is %0h", counter), UVM_LOW)
+      p_rm.counter.peek(status, value);
+      counter = value;
+      `uvm_info("case0_cfg_vseq", $sformatf("after poke, counter's value(BACKDOOR) is %0h", counter), UVM_LOW)
       if(starting_phase != null) 
          starting_phase.drop_objection(this);
    endtask
@@ -59,11 +80,7 @@ class case0_vseq extends uvm_sequence;
       #10000;
       dseq = case0_sequence::type_id::create("dseq");
       dseq.start(p_sequencer.p_my_sqr);
-      #100000;
-      p_sequencer.p_rm.counter.mirror(status, UVM_CHECK, UVM_FRONTDOOR); 
-
-      p_sequencer.p_rm.counter.peek(status, value);
-      `uvm_info("case0_vseq", $sformatf("counter's value is %0h", value), UVM_LOW)
+      
       if(starting_phase != null) 
          starting_phase.drop_objection(this);
    endtask
