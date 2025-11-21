@@ -25,37 +25,47 @@ class case0_cfg_vseq extends uvm_sequence;
       super.new(name);
    endfunction 
    
+   virtual task read_reg(input bit[15:0] addr, output bit[15:0] value);
+      uvm_status_e   status;
+      uvm_reg target;
+      uvm_reg_data_t data;
+      uvm_reg_addr_t addrs[];
+      target = p_sequencer.p_rm.default_map.get_reg_by_offset(addr);
+      if(target == null) 
+         `uvm_error("case0_cfg_vseq", $sformatf("can't find reg in register model with address: 'h%0h", addr))
+      target.read(status, data, UVM_FRONTDOOR);
+      void'(target.get_addresses(null,addrs));
+      if(addrs.size() == 1)
+         value = data[15:0]; 
+      else begin
+         int index;
+         for(int i = 0; i < addrs.size(); i++) begin
+            if(addrs[i] == addr) begin
+               data = data >> (16*(addrs.size() - i));
+               value = data[15:0];
+               break;
+            end
+         end
+      end 
+   endtask
+
    virtual task body();
       uvm_status_e   status;
       uvm_reg_data_t value;
-      bit[31:0] counter;
-      uvm_reg_block blks[$];
-      reg_model p_rm;
+
       if(starting_phase != null) 
          starting_phase.raise_objection(this);
-      uvm_reg_block::get_root_blocks(blks);
-      if(blks.size() == 0)
-          `uvm_fatal("case0_cfg_vseq", "can't find root blocks")
-      else begin
-         if(!$cast(p_rm, blks[0]))
-             `uvm_fatal("case0_cfg_vseq", "can't cast to reg_model")
-      end
-          
-      p_rm.invert.read(status, value, UVM_FRONTDOOR);
+      p_sequencer.p_rm.gb_ins.invert.read(status, value, UVM_FRONTDOOR);
       `uvm_info("case0_cfg_vseq", $sformatf("invert's initial value is %0h", value), UVM_LOW)
-      p_rm.invert.write(status, 1, UVM_FRONTDOOR);
-      p_rm.invert.read(status, value, UVM_FRONTDOOR);
+      p_sequencer.p_rm.gb_ins.invert.write(status, 1, UVM_FRONTDOOR);
+      p_sequencer.p_rm.gb_ins.invert.read(status, value, UVM_FRONTDOOR);
       `uvm_info("case0_cfg_vseq", $sformatf("after set, invert's value is %0h", value), UVM_LOW)
-      p_rm.counter.read(status, value, UVM_FRONTDOOR);
-      counter = value;
-      `uvm_info("case0_cfg_vseq", $sformatf("counter's initial value(FRONTDOOR) is %0h", counter), UVM_LOW)
-      p_rm.counter.poke(status, 32'hFFFD);
-      p_rm.counter.read(status, value, UVM_FRONTDOOR);
-      counter = value;
-      `uvm_info("case0_cfg_vseq", $sformatf("after poke, counter's value(FRONTDOOR) is %0h", counter), UVM_LOW)
-      p_rm.counter.peek(status, value);
-      counter = value;
-      `uvm_info("case0_cfg_vseq", $sformatf("after poke, counter's value(BACKDOOR) is %0h", counter), UVM_LOW)
+      p_sequencer.p_rm.bb_ins.depth.read(status, value, UVM_FRONTDOOR);
+      `uvm_info("case0_cfg_vseq", $sformatf("not existed reg depth's read value is %0h", value), UVM_LOW)
+      read_reg('h0005, value);
+      `uvm_info("case0_cfg_vseq", $sformatf("'h0005's value is %0h", value), UVM_LOW)
+      read_reg('h0006, value);
+      `uvm_info("case0_cfg_vseq", $sformatf("'h0006's value is %0h", value), UVM_LOW)
       if(starting_phase != null) 
          starting_phase.drop_objection(this);
    endtask
