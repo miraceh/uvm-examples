@@ -1,75 +1,52 @@
 `ifndef MY_CASE0__SV
 `define MY_CASE0__SV
+class case0_sequence extends uvm_sequence #(my_transaction);
+   my_transaction m_trans;
 
-class simple_seq_library extends uvm_sequence_library#(my_transaction);
-   function  new(string name= "simple_seq_library");
+   function  new(string name= "case0_sequence");
       super.new(name);
-      init_sequence_library();
-   endfunction
+   endfunction 
+   
+   virtual task body();
+      if(starting_phase != null) 
+         starting_phase.raise_objection(this);
+      repeat (10) begin
+         `uvm_do(m_trans)
+      end
+      #100;
+      if(starting_phase != null) 
+         starting_phase.drop_objection(this);
+   endtask
 
-   `uvm_object_utils(simple_seq_library)
-   `uvm_sequence_library_utils(simple_seq_library);
-
+   `uvm_object_utils(case0_sequence)
 endclass
 
-class seq0 extends uvm_sequence#(my_transaction);
-   function  new(string name= "seq0");
-      super.new(name);
+class bird extends uvm_object;
+   virtual function void hungry();
+      $display("I am a bird, I am hungry");
+   endfunction
+   function void hungry2();
+      $display("I am a bird, I am hungry2");
    endfunction
 
-   `uvm_object_utils(seq0)
-   `uvm_add_to_seq_lib(seq0, simple_seq_library)
-   virtual task body();
-      repeat(10) begin
-         `uvm_do(req)
-         `uvm_info("seq0", "this is seq0", UVM_MEDIUM)
-      end
-   endtask 
+   `uvm_object_utils(bird)
+   function new(string name = "bird");
+      super.new(name);
+   endfunction 
 endclass
 
-class seq1 extends uvm_sequence#(my_transaction);
-   function  new(string name= "seq1");
-      super.new(name);
+class parrot extends bird;
+   virtual function void hungry();
+      $display("I am a parrot, I am hungry");
+   endfunction
+   function void hungry2();
+      $display("I am a parrot, I am hungry2");
    endfunction
 
-   `uvm_object_utils(seq1)
-   `uvm_add_to_seq_lib(seq1, simple_seq_library)
-   virtual task body();
-      repeat(10) begin
-         `uvm_do(req)
-         `uvm_info("seq1", "this is seq1", UVM_MEDIUM)
-      end
-   endtask 
-endclass
-
-class seq2 extends uvm_sequence#(my_transaction);
-   function  new(string name= "seq2");
+   `uvm_object_utils(parrot)
+   function new(string name = "parrot");
       super.new(name);
-   endfunction
-
-   `uvm_object_utils(seq2)
-   `uvm_add_to_seq_lib(seq2, simple_seq_library)
-   virtual task body();
-      repeat(10) begin
-         `uvm_do(req)
-         `uvm_info("seq2", "this is seq2", UVM_MEDIUM)
-      end
-   endtask 
-endclass
-
-class seq3 extends uvm_sequence#(my_transaction);
-   function  new(string name= "seq3");
-      super.new(name);
-   endfunction
-
-   `uvm_object_utils(seq3)
-   `uvm_add_to_seq_lib(seq3, simple_seq_library)
-   virtual task body();
-      repeat(10) begin
-         `uvm_do(req)
-         `uvm_info("seq3", "this is seq3", UVM_MEDIUM)
-      end
-   endtask 
+   endfunction 
 endclass
 
 class my_case0 extends base_test;
@@ -78,22 +55,24 @@ class my_case0 extends base_test;
       super.new(name,parent);
    endfunction 
    extern virtual function void build_phase(uvm_phase phase); 
+   extern virtual function void print_hungry(bird b_ptr); 
    `uvm_component_utils(my_case0)
 endclass
 
+function void my_case0::print_hungry(bird b_ptr);
+   b_ptr.hungry();
+   b_ptr.hungry2();
+endfunction
 
 function void my_case0::build_phase(uvm_phase phase);
-   simple_seq_library seq_lib;
+   bird bird_inst;
+   parrot parrot_inst;
    super.build_phase(phase);
-
-   seq_lib = new("seq_lib");
-   seq_lib.selection_mode = UVM_SEQ_LIB_RANDC;
-   seq_lib.min_random_count = 10;
-   seq_lib.max_random_count = 15; 
-   uvm_config_db#(uvm_sequence_base)::set(this, 
-                                           "env.i_agt.sqr.main_phase", 
-                                           "default_sequence", 
-                                           seq_lib);
+ 
+   bird_inst = bird::type_id::create("bird_inst");
+   parrot_inst = parrot::type_id::create("parrot_inst");
+   print_hungry(bird_inst);
+   print_hungry(parrot_inst);
 endfunction
 
 `endif
