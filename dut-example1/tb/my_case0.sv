@@ -68,7 +68,9 @@ function void my_case0::build_phase(uvm_phase phase);
    bird bird_inst;
    parrot parrot_inst;
    super.build_phase(phase);
- 
+   
+   set_type_override_by_type(bird::get_type(), parrot::get_type());
+   
    bird_inst = bird::type_id::create("bird_inst");
    parrot_inst = parrot::type_id::create("parrot_inst");
    print_hungry(bird_inst);
