@@ -49,16 +49,16 @@ class parrot extends bird;
    endfunction 
 endclass
 
-class big_parrot extends parrot;
+class sparrow extends bird;
    virtual function void hungry();
-      $display("I am a big_parrot, I am hungry");
+      $display("I am a sparrow, I am hungry");
    endfunction
    function void hungry2();
-      $display("I am a big_parrot, I am hungry2");
+      $display("I am a sparrow, I am hungry2");
    endfunction
 
-   `uvm_object_utils(big_parrot)
-   function new(string name = "big_parrot");
+   `uvm_object_utils(sparrow)
+   function new(string name = "sparrow");
       super.new(name);
    endfunction 
 endclass
@@ -84,7 +84,7 @@ function void my_case0::build_phase(uvm_phase phase);
    super.build_phase(phase);
    
    set_type_override_by_type(bird::get_type(), parrot::get_type());
-   set_type_override_by_type(parrot::get_type(), big_parrot::get_type());
+   set_type_override_by_type(bird::get_type(), sparrow::get_type(), 1);
    
    bird_inst = bird::type_id::create("bird_inst");
    parrot_inst = parrot::type_id::create("parrot_inst");
