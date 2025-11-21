@@ -21,18 +21,46 @@ class case0_sequence extends uvm_sequence #(my_transaction);
    `uvm_object_utils(case0_sequence)
 endclass
 
-class new_monitor extends my_monitor;
-   `uvm_component_utils(new_monitor)
-   function new(string name = "new_monitor", uvm_component parent = null);
-      super.new(name, parent);
+class bird extends uvm_object;
+   virtual function void hungry();
+      $display("I am a bird, I am hungry");
+   endfunction
+   function void hungry2();
+      $display("I am a bird, I am hungry2");
    endfunction
 
-   virtual task main_phase(uvm_phase phase);
-      fork
-         super.main_phase(phase);
-      join_none
-      `uvm_info("new_monitor", "I am new monitor", UVM_MEDIUM)
-   endtask
+   `uvm_object_utils(bird)
+   function new(string name = "bird");
+      super.new(name);
+   endfunction 
+endclass
+
+class parrot extends bird;
+   virtual function void hungry();
+      $display("I am a parrot, I am hungry");
+   endfunction
+   function void hungry2();
+      $display("I am a parrot, I am hungry2");
+   endfunction
+
+   `uvm_object_utils(parrot)
+   function new(string name = "parrot");
+      super.new(name);
+   endfunction 
+endclass
+
+class big_parrot extends parrot;
+   virtual function void hungry();
+      $display("I am a big_parrot, I am hungry");
+   endfunction
+   function void hungry2();
+      $display("I am a big_parrot, I am hungry2");
+   endfunction
+
+   `uvm_object_utils(big_parrot)
+   function new(string name = "big_parrot");
+      super.new(name);
+   endfunction 
 endclass
 
 class my_case0 extends base_test;
@@ -41,19 +69,27 @@ class my_case0 extends base_test;
       super.new(name,parent);
    endfunction 
    extern virtual function void build_phase(uvm_phase phase); 
+   extern virtual function void print_hungry(bird b_ptr); 
    `uvm_component_utils(my_case0)
 endclass
 
+function void my_case0::print_hungry(bird b_ptr);
+   b_ptr.hungry();
+   b_ptr.hungry2();
+endfunction
 
 function void my_case0::build_phase(uvm_phase phase);
+   bird bird_inst;
+   parrot parrot_inst;
    super.build_phase(phase);
-
-   //set_inst_override_by_type("env.o_agt.mon", my_monitor::get_type(), new_monitor::get_type());
-   set_inst_override("env.o_agt.mon", "my_monitor", "new_monitor");
-   uvm_config_db#(uvm_object_wrapper)::set(this, 
-                                           "env.i_agt.sqr.main_phase", 
-                                           "default_sequence", 
-                                           case0_sequence::type_id::get());
+   
+   set_type_override_by_type(bird::get_type(), parrot::get_type());
+   set_type_override_by_type(parrot::get_type(), big_parrot::get_type());
+   
+   bird_inst = bird::type_id::create("bird_inst");
+   parrot_inst = parrot::type_id::create("parrot_inst");
+   print_hungry(bird_inst);
+   print_hungry(parrot_inst);
 endfunction
 
 `endif
