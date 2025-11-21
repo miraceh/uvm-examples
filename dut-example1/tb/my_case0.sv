@@ -21,6 +21,20 @@ class case0_sequence extends uvm_sequence #(my_transaction);
    `uvm_object_utils(case0_sequence)
 endclass
 
+class bear extends uvm_object;
+   virtual function void hungry();
+      $display("I am a bear, I am hungry");
+   endfunction
+   function void hungry2();
+      $display("I am a bear, I am hungry2");
+   endfunction
+
+   `uvm_object_utils(bear)
+   function new(string name = "bear");
+      super.new(name);
+   endfunction 
+endclass
+
 class bird extends uvm_object;
    virtual function void hungry();
       $display("I am a bird, I am hungry");
@@ -69,7 +83,8 @@ function void my_case0::build_phase(uvm_phase phase);
    parrot parrot_inst;
    super.build_phase(phase);
    
-   set_type_override_by_type(bird::get_type(), parrot::get_type());
+   set_type_override_by_type(bird::get_type(), bear::get_type());
+   //set_type_override_by_type(parrot::get_type(), bird::get_type());
    
    bird_inst = bird::type_id::create("bird_inst");
    parrot_inst = parrot::type_id::create("parrot_inst");
