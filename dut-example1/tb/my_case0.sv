@@ -18,50 +18,39 @@ class normal_sequence extends uvm_sequence #(my_transaction);
    endtask 
    
    virtual task body();
-      `uvm_do(m_trans)
-      m_trans.print();
+      repeat (10) begin
+         `uvm_do(m_trans)
+         m_trans.print();
+      end
+      #100;
    endtask
 
    `uvm_object_utils(normal_sequence)
 endclass
 
-class case_sequence extends uvm_sequence #(my_transaction);
-   `uvm_object_utils(case_sequence)
-   function  new(string name= "case_sequence");
-      super.new(name);
+class crc_driver extends my_driver;
+   `uvm_component_utils(crc_driver)
+   function new(string name = "crc_driver", uvm_component parent = null);
+      super.new(name, parent);
    endfunction
-   
-   virtual task pre_body();
-      if(starting_phase != null) 
-         starting_phase.raise_objection(this);
-   endtask 
-   virtual task post_body();
-      if(starting_phase != null) 
-         starting_phase.drop_objection(this);
-   endtask 
-   
-   virtual task body();
-      normal_sequence nseq;
-      repeat(10) begin
-         `uvm_do(nseq)
+
+   virtual function void inject_crc_err(my_transaction tr);
+      tr.crc = $urandom_range(10000000, 0);
+   endfunction
+
+   virtual task main_phase(uvm_phase phase);
+      vif.data <= 8'b0;
+      vif.valid <= 1'b0;
+      while(!vif.rst_n)
+         @(posedge vif.clk);
+      while(1) begin
+         seq_item_port.get_next_item(req);
+         inject_crc_err(req);
+         drive_one_pkt(req);
+         seq_item_port.item_done();
       end
-   endtask 
-endclass
-
-class abnormal_sequence extends normal_sequence;
-   `uvm_object_utils(abnormal_sequence)
-   function  new(string name= "abnormal_sequence");
-      super.new(name);
-   endfunction 
-
-   virtual task body();
-      m_trans = new("m_trans");
-      m_trans.crc_err_cons.constraint_mode(0);
-      `uvm_rand_send_with(m_trans, {crc_err == 1;}) 
-      m_trans.print();
    endtask
 endclass
-
 
 class my_case0 extends base_test;
 
@@ -76,11 +65,11 @@ endclass
 function void my_case0::build_phase(uvm_phase phase);
    super.build_phase(phase);
 
-   factory.set_type_override_by_type(normal_sequence::get_type(), abnormal_sequence::get_type());
+   factory.set_type_override_by_type(my_driver::get_type(), crc_driver::get_type());
    uvm_config_db#(uvm_object_wrapper)::set(this, 
                                            "env.i_agt.sqr.main_phase", 
                                            "default_sequence", 
-                                           case_sequence::type_id::get());
+                                           normal_sequence::type_id::get());
 endfunction
 
 `endif
